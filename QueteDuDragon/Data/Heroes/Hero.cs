@@ -1,10 +1,10 @@
-﻿namespace QuêteduDragon.Data.Hero
+﻿namespace QueteDuDragon.Data.Heroes
 {
     public abstract class Hero
     {
         public string Name { get; set; }
         public int pointsVie { get; set; } = 5;
-        public List<string> Skills { get; set; }
+        public List<string> Skills { get; set; } = new List<string>();
         public List<string> objetsCollectes { get; set; } = new List<string>();
         public int niveauExperience { get; set; } = 1;
 
@@ -14,7 +14,7 @@
             
         }
 
-        public void objetsCollecte(string objets)
+        public void AjouterObjet(string objets)
         {
             objetsCollectes.Add(objets);
             UpdateniveauExperience();
@@ -31,7 +31,7 @@
         {
             // Vide par défaut
         }
-
+        
     }
 
 }

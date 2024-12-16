@@ -1,4 +1,4 @@
-﻿namespace QueteDuDragon.Data.Hero;
+﻿namespace QueteDuDragon.Data.Heroes;
 
 public class Thief : Hero
     {
@@ -10,4 +10,3 @@ public class Thief : Hero
             Skills.Add("Disparition");
         }
     }
-}

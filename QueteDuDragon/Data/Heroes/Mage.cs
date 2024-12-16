@@ -1,4 +1,4 @@
-﻿namespace QueteDuDragon.Data.Hero;
+﻿namespace QueteDuDragon.Data.Heroes;
 
 public class Mage : Hero
     {
