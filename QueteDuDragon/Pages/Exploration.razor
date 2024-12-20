@@ -1,7 +1,8 @@
-﻿@using QueteDuDragon.Data
+﻿@page "/exploration"
+@using QueteDuDragon.Data
 @using QueteDuDragon.Data.Heroes
 @inject EtatJeu EtatJeu
-@page "/exploration"
+
 
 @code{
 
@@ -24,11 +25,12 @@
 
 }
 
+
 <h3>Exploration</h3>
 @if (EtatJeu.SelectedHero == null)
 {
     <p>Veuillez choisir un héros d'abord.</p>
-    <a href="/hero-selection">Retour à la selection</a>
+    <a href="/Selection-hero">Retour à la selection</a>
 }
 else
 {
