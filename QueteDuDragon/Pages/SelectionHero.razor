@@ -2,7 +2,7 @@
 @inject NavigationManager NavigationManager
 @using QueteDuDragon.Data.Heroes;
 @using QueteDuDragon.Data;
-
+@page "/Selection-hero"
 
 <h3>Choissisez votre héros:</h3>
 <div>
@@ -24,7 +24,7 @@
         };
 
         //competences du heros
-        hero?.InitializeSkills();
+        hero.InitializeSkills();
         
         
         //mettre a jour l'etat du jeu
