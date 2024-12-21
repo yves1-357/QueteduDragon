@@ -3,6 +3,13 @@
 @code {
     private int treasureRow;
     private int treasureCol;
+    private List<(int row, int col)> dungeonLocations = new List<(int row, int col)>()
+    {
+        (1, 1),
+        (1, 18),
+        (13, 1),
+        (13, 18)
+    };
     private Random random = new Random();
 
     protected override void OnInitialized()
@@ -16,9 +23,8 @@
         {
             treasureRow = random.Next(0, 15);
             treasureCol = random.Next(0, 20);
-        } while (IsMountain(treasureRow, treasureCol) || (treasureRow == 7 && treasureCol == 10));
+        } while (IsMountain(treasureRow, treasureCol) || (treasureRow == 7 && treasureCol == 10) || dungeonLocations.Contains((treasureRow, treasureCol)));
     }
-
 
     private bool IsMountain(int row, int col)
     {
@@ -36,11 +42,15 @@
                 {
                     <img src="Images/tresor.png" alt="Tresor" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
+                else if (dungeonLocations.Contains((row, col)))
+                {
+                    <img src="Images/donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                }
                 else if (row == 0 || row == 14 || col == 0 || col == 19)
                 {
                     <img src="Images/Montagne.png" alt="Montagne" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
-                else if (row == 7 && col == 10)
+                else if (row == 7 && col == 09)
                 {
                     <img src="Images/shop.png" alt="Shop" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
@@ -52,7 +62,6 @@
         }
     }
 </div>
-
 
 <style>
     .map {
