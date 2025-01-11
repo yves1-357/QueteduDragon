@@ -1,5 +1,7 @@
 ﻿@page "/mode-facile"
+@using QueteDuDragon.Data
 @inject NavigationManager Navigation
+@inject EtatJeu EtatJeu
 
 <h3>Mode Facile</h3>
 <p>Bienvenue dans le mode facile !</p>
@@ -13,7 +15,9 @@ Préparez-vous à affronter le BossFinal et collecter des objets
 
     private void AllerAuMagasin()
     {
-        Navigation.NavigateTo("/marchand",true);
+        Navigation.NavigateTo("/marchand");
     }
+    
+ 
 
 }

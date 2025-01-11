@@ -1,6 +1,9 @@
 ﻿<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <RouteView Route="/mode-facile" PageType="typeof(ModeFacile)" />
+        <RouteView Route="/mode-difficile" PageType="typeof(ModeDifficile)" />
+        
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>

@@ -7,6 +7,11 @@ using QueteDuDragon.Data.bossFinal;
 public class EtatJeu
 {
     public Hero SelectedHero { get; set; }
+    public EtatJeu()
+    {
+        SelectedHero = new Warrior { Name = "Héros par défaut" }; // Exemple de valeur par défaut
+    }
+
     public Dragon bossFinal { get; set; } = new Dragon(); // Initialisation du BossFinal
 
     public List<string> objetsCollectes { get; private set; } = new List<string>();  // Suivi des objets collectés

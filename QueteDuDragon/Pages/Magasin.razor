@@ -3,25 +3,36 @@
 @inject EtatJeu EtatJeu
 @inject NavigationManager Navigation
 
+@if (EtatJeu == null || EtatJeu.SelectedHero == null)
+{
+    <p>Erreur : Le héros ou l'état du jeu n'a pas été initialisé. Veuillez retourner en arrière et réessayer.</p>
+    <button @onclick="Retourner">Retour</button>
+}
+else
+{
 
-<h3>Magasin </h3>
-<p>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</p>
+    <h3>Magasin </h3>
+    <p>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</p>
 
-<p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
-<p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
+    <p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
+    <p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
+    
+    <img src="/images/marchand/mag.jpg" alt="Test image" style="width: 900px; height: auto;" />
 
-<div style="
+
+    <div style="background-image: url('../wwwroot/images/marchand/mag.jpg');
 background-size: cover; padding: 20px; border: 2px solid #333; border-radius: 10px;">
-    @foreach (var item in MagasinObjets)
-    {
-        <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
-            @item
-        </button>
-    }
-</div>
+        @foreach (var item in MagasinObjets)
+        {
+            <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
+                @item
+            </button>
+        }
+    </div>
 
-<p>Objets collectés : @string.Join(", ", EtatJeu.objetsCollectes)</p>
-<button @onclick="Retourner">Retour</button>
+    <p>Objets collectés : @string.Join(", ", EtatJeu.objetsCollectes)</p>
+    
+    <button @onclick="Retourner">Retour</button>
 
 @code {
     private List<string> MagasinObjets = new List<string>
@@ -44,8 +55,19 @@ background-size: cover; padding: 20px; border: 2px solid #333; border-radius: 10
 
     private void Retourner()
     {
-        Navigation.NavigateTo("/mode-facile"); // Ou "/mode-difficile" selon d'où l'utilisateur est arrivé
+        Console.WriteLine("Retourner appelé");
+        if (EtatJeu.SelectedMode == "Facile")
+        {
+            Console.WriteLine("Retourner appelé");
+            Navigation.NavigateTo("/mode-facile",true);
+        }
+        else if (EtatJeu.SelectedMode == "Difficile")
+        {
+            Navigation.NavigateTo("/mode-difficile",true);
+        }
     }
 
 
+
+}
 }

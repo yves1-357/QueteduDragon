@@ -42,6 +42,12 @@
 
     private void HandleFormSubmit()
     {
+        if (EtatJeu.SelectedHero == null)
+        {
+            ErrorMessage = "Erreur : Héros non défini.";
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(HeroName))
         {
             ErrorMessage = "veuillez entrer un nom pour votre heros.";
