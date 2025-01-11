@@ -4,6 +4,7 @@
     {
         public string Name { get; set; }
         public int pointsVie { get; set; } = 5;
+        public int Level { get; set; } = 1; // Par défaut, le héros commence au niveau 1
         public List<string> Skills { get; set; } = new List<string>();
 
         public List<string> Tools { get; set; } = new List<string>(); // outils achete au magasin 
@@ -51,7 +52,15 @@
             pointsVie -= damage;
             if (pointsVie < 0) pointsVie = 0;
         }
-        
+
+        public int AllowedPurchases => Level switch
+        {
+            1 => 3,
+            2 => 4,
+            3 => 7,
+            _ => 0
+        };
+
     }
 
 }

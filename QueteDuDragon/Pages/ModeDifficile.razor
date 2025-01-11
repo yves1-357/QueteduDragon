@@ -1,5 +1,18 @@
-﻿<h3>ModeDifficile</h3>
+﻿@page "/mode-difficile"
+@inject NavigationManager Navigation
+<h3>Mode Difficile</h3>
+<p>Bienvenue dans le mode difficile !</p>
+<br>
+Préparez-vous à un combat acharné avec les montres!
+<br/>
 
-@code {
-    
+<button @onclick="AllerAuMagasin">Aller au Magasin</button>
+
+@code{
+
+    private void AllerAuMagasin()
+    {
+        Navigation.NavigateTo("/marchand",true);
+    }
+
 }

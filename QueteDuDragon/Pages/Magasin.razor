@@ -1,0 +1,51 @@
+﻿@page "/marchand"
+@using QueteDuDragon.Data
+@inject EtatJeu EtatJeu
+@inject NavigationManager Navigation
+
+
+<h3>Magasin </h3>
+<p>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</p>
+
+<p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
+<p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
+
+<div style="
+background-size: cover; padding: 20px; border: 2px solid #333; border-radius: 10px;">
+    @foreach (var item in MagasinObjets)
+    {
+        <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
+            @item
+        </button>
+    }
+</div>
+
+<p>Objets collectés : @string.Join(", ", EtatJeu.objetsCollectes)</p>
+<button @onclick="Retourner">Retour</button>
+
+@code {
+    private List<string> MagasinObjets = new List<string>
+    {
+        "Épée à deux mains", "Hache de guerre", "Arc long", "Dague", "Marteau de guerre",
+        "Armure de plaque", "Bouclier enchanté", "Potion de soins", "Potion de force",
+        "Potion de vitesse", "Pierre de téléportation", "Sceau de protection", "Anneau de résistance",
+        "Amulette de protection", "Potion de soins universelle", "Pierre philosophale (fragment)",
+        "Carte du monde détaillée", "Boussole magique", "Miroir magique", "Kit de survie"
+    };
+
+    private void AcheterObjet(string objet)
+    {
+        if (EtatJeu.objetsCollectes.Count < EtatJeu.SelectedHero.AllowedPurchases)
+        {
+            EtatJeu.objetsCollectes.Add(objet);
+            EtatJeu.SelectedHero.Skills.Add(objet); // Ajouter à ses compétences
+        }
+    }
+
+    private void Retourner()
+    {
+        Navigation.NavigateTo("/mode-facile"); // Ou "/mode-difficile" selon d'où l'utilisateur est arrivé
+    }
+
+
+}

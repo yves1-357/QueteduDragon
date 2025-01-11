@@ -6,13 +6,17 @@ using QueteDuDragon.Data.bossFinal;
 
 public class EtatJeu
 {
-    public Hero? SelectedHero { get; set; }
+    public Hero SelectedHero { get; set; }
     public Dragon bossFinal { get; set; } = new Dragon(); // Initialisation du BossFinal
 
     public List<string> objetsCollectes { get; private set; } = new List<string>();  // Suivi des objets collectés
 
     public bool IscombatActive { get; set; } = false; // etat du combat
     
+    public int CombatTurns { get; set; } = 0;
+    public const int MaxTurns = 10;
+
+    public string SelectedMode { get; set; } = ""; // mode de jeu (facile, difficile)
 
     public void SelectHero(Hero hero)
     {
@@ -49,8 +53,7 @@ public class EtatJeu
         }
     }
 
-    public int CombatTurns { get; set; } = 0;
-    public const int MaxTurns = 10;
+
 
     public void IncrementCombatTurns()
     {
@@ -61,5 +64,13 @@ public class EtatJeu
             throw new InvalidOperationException("Vous avez dépassé la limite de tours. Le bossFinal vous a vaincu:!");
             
         }
+    }
+    public void SetMode(string mode)
+    {
+        if (mode != "Facile" && mode != "Difficile")
+        {
+            throw new ArgumentException("Mode invalide");
+        }
+        SelectedMode = mode;
     }
 }

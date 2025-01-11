@@ -4,31 +4,87 @@
 @using QueteDuDragon.Data;
 @page "/Selection-hero"
 
-<h3>Choissisez votre héros:</h3>
-<div>
-    <button @onclick="@(() => ChooseHero("Warrior"))">Guerrier</button>
-    <button @onclick="@(() => ChooseHero("Mage"))">Mage</button>
-    <button @onclick="@(() => ChooseHero("Thief"))">Voleur</button>
-</div>
+<h3>Choissisez votre héros et le mode de jeu :</h3>
+
+<form @onsubmit="HandleFormSubmit">
+    <label for="hero-name">Nom du héros:</label>
+    <input type="text" id="hero-name"@Bind="HeroName" placeholder="Entrez votre nom" required/>
+
+    <label for="hero-choice">Choix du héros :</label>
+    <select id="hero-choice" @bind="HeroType" required>
+        <option value="Warrior">Guerrier</option>
+        <option value="Mage">Mage</option>
+        <option value="Thief">Voleur</option>
+    </select>
+
+    <label for="mode">Mode :</label>
+    <select id="mode" @bind="GameMode" required>
+        <option value="Facile">Facile</option>
+        <option value="Difficile">Difficile</option>
+    </select>
+
+    <button type="submit">Commencer l'aventure</button>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p style="color:red;">@ErrorMessage</p>
+}
+
 
 @code {
 
-    private void ChooseHero(string heroType)
-    {
-        Hero hero = heroType switch
-        {
-            "Warrior" => new Warrior { Name = "Guerrier" },
-            "Mage" => new Mage { Name = "Mage" },
-            "Thief" => new Thief { Name = "Voleur" },
-            _ =>  new Warrior { Name = "Héros par défaut" } // Créer un héros par défaut ( a changer plu tard en "null" ) 
-        };
+    private string HeroName { get; set; } = String.Empty;
+    private string HeroType { get; set; } = "Warrior"; // Valeur par défaut
+    private string GameMode { get; set; } = "Facile"; // Valeur par défaut
+    private string? ErrorMessage { get; set; }
 
-        //competences du heros
-        hero.InitializeSkills();
+
+    private void HandleFormSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(HeroName))
+        {
+            ErrorMessage = "veuillez entrer un nom pour votre heros.";
+            return;
+
+        }
+
+        try
+        {
+
+        // Création du héros basé sur les entrées du formulaire
+    Hero selectedHero = HeroType switch
+    {
+        "Warrior" => new Warrior { Name = HeroName },
+        "Mage" => new Mage { Name = HeroName },
+        "Thief" => new Thief { Name = HeroName },
+        _ => throw new InvalidOperationException("Type de héros invalide.")
+    };
+    
+    // Initialiser les compétences du héros
+    selectedHero.InitializeSkills();
+
+    //mettre a jour l'etat du jeu
+        EtatJeu.SelectedHero = selectedHero;
+        EtatJeu.SelectedMode = GameMode;
         
-        
-        //mettre a jour l'etat du jeu
-        EtatJeu.SelectedHero = hero;
-        NavigationManager.NavigateTo("/exploration");
+       Console.WriteLine($"Heros selectionée:{HeroName} ({HeroType})");
+       Console.WriteLine($"Mode sélectionné : {GameMode}");
+    
+    // Rediriger selon le mode sélectionné
+    if (GameMode == "Facile")
+    {
+        NavigationManager.NavigateTo("/mode-facile");
+    }
+    else
+    {
+        NavigationManager.NavigateTo("/mode-difficile");
+    }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erreur lors de la création du héros : {ex.Message}";
+            Console.WriteLine(ErrorMessage);
+        }
     }
 }

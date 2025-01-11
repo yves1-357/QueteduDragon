@@ -1,5 +1,19 @@
-﻿<h3>ModeFacile</h3>
+﻿@page "/mode-facile"
+@inject NavigationManager Navigation
 
-@code {
-    
+<h3>Mode Facile</h3>
+<p>Bienvenue dans le mode facile !</p>
+<br>
+Préparez-vous à affronter le BossFinal et collecter des objets
+<br/>
+
+<button @onclick="AllerAuMagasin">Aller au Magsin </button>
+
+@code{
+
+    private void AllerAuMagasin()
+    {
+        Navigation.NavigateTo("/marchand",true);
+    }
+
 }
