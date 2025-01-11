@@ -1,0 +1,34 @@
+﻿@inject EtatJeu EtatJeu
+@inject NavigationManager NavigationManager
+@using QueteDuDragon.Data.Heroes;
+@using QueteDuDragon.Data;
+@page "/Selection-hero"
+
+<h3>Choissisez votre héros:</h3>
+<div>
+    <button @onclick="@(() => ChooseHero("Warrior"))">Guerrier</button>
+    <button @onclick="@(() => ChooseHero("Mage"))">Mage</button>
+    <button @onclick="@(() => ChooseHero("Thief"))">Voleur</button>
+</div>
+
+@code {
+
+    private void ChooseHero(string heroType)
+    {
+        Hero hero = heroType switch
+        {
+            "Warrior" => new Warrior { Name = "Guerrier" },
+            "Mage" => new Mage { Name = "Mage" },
+            "Thief" => new Thief { Name = "Voleur" },
+            _ =>  new Warrior { Name = "Héros par défaut" } // Créer un héros par défaut ( a changer plu tard en "null" ) 
+        };
+
+        //competences du heros
+        hero.InitializeSkills();
+        
+        
+        //mettre a jour l'etat du jeu
+        EtatJeu.SelectedHero = hero;
+        NavigationManager.NavigateTo("/exploration");
+    }
+}

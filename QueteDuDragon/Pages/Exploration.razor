@@ -1,0 +1,55 @@
+﻿@page "/exploration"
+@using QueteDuDragon.Data
+@using QueteDuDragon.Data.Heroes
+@inject EtatJeu EtatJeu
+
+
+@code{
+
+    private Hero hero = new Warrior();
+    // création instance de notre héros ici guerrier par defaut
+        
+    private static readonly string[] AvailableItems =
+    {
+        "Or", "Collier", "Montre", "Epee", "Potion", "Armes à feu", "bottes",
+        "cordes","flèches", "gants", "haches", "arcs", "dagues", "torches",
+        "Cuirasses", "batons",
+    };
+
+    private void Explore()
+    {
+        Random random = new Random();
+        string foundItem = AvailableItems[random.Next(AvailableItems.Length)];
+        hero.AjouterObjet(foundItem);
+    }
+
+}
+
+
+<h3>Exploration</h3>
+@if (EtatJeu.SelectedHero == null)
+{
+    <p>Veuillez choisir un héros d'abord.</p>
+    <a href="/Selection-hero">Retour à la selection</a>
+}
+else
+{
+    <p>Héroes : @EtatJeu.SelectedHero.Name</p>
+    <p>Points de vie : @EtatJeu.SelectedHero.pointsVie</p>
+    <p>Compétences : </p>
+    <ul>
+        @foreach (var skill in EtatJeu.SelectedHero.Skills)
+        {
+            <li>@skill</li>
+        }
+    </ul>
+
+}
+
+}
+<p>Objets collectés : string.Join(", ",Heroes.objetsCollectes)</p>
+<p>Niveau experience : @hero.niveauExperience </p>
+<p>Points de vie  : @hero.pointsVie</p>
+
+<button @onclick="Explore">Explorer</button>
+}
