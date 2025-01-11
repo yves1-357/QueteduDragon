@@ -90,5 +90,18 @@ footer {
     text-align: center;
     padding: 10px;
 }
+.background-image {
+    background-image: url('../images/marchand/mag.jpg');
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-attachment: fixed; /* L'image reste fixe lors du défilement */
+    background-repeat: no-repeat; /* Ne pas répéter l'image */
+    height: 400px; /* Ajustez selon vos besoins */
+    width: 100%;
+    border: 2px solid #333;
+    border-radius: 10px;
+    }
+
+
 
 

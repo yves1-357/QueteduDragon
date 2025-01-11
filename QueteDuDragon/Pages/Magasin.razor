@@ -17,7 +17,10 @@ else
     <p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
     <p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
     
-    <img src="/images/marchand/mag.jpg" alt="Test image" style="width: 900px; height: auto;" />
+    <div class="background-image">
+        <!-- Contenu ou vide -->
+    </div>
+
 
 
     <div style="background-image: url('../wwwroot/images/marchand/mag.jpg');
@@ -60,6 +63,8 @@ background-size: cover; padding: 20px; border: 2px solid #333; border-radius: 10
         {
             Console.WriteLine("Retourner appelé");
             Navigation.NavigateTo("/mode-facile",true);
+           
+
         }
         else if (EtatJeu.SelectedMode == "Difficile")
         {
