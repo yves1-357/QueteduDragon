@@ -1,5 +1,6 @@
 ﻿body {
     font-family: Arial, sans-serif;
+    font-weight: bold;
     margin: 0;
     padding: 0;
     background-color: #f4f4f9;
@@ -19,15 +20,18 @@
 h1, h3, h4, h5, h6 {
     margin: 0 0 10px;
     color:yellow;
+    font-weight: bold;
 }
 h3{
     margin: 0 0 10px;
     color:yellow;
+    font-weight: bold;
 }
 
 h2{
     margin: 0 0 10px;
     color:#2e4053;
+    font-weight: bold;
 }
 
 h1 {
@@ -45,6 +49,7 @@ button {
     background-color: blue;
     color: white;
     border-radius: 5px;
+    font-weight: bold;
 }
 
 button:disabled {
@@ -96,10 +101,13 @@ footer {
     background-position: center; /* Centrer l'image */
     background-attachment: fixed; /* L'image reste fixe lors du défilement */
     background-repeat: no-repeat; /* Ne pas répéter l'image */
-    height: 400px; /* Ajustez selon vos besoins */
+    height:300px;
     width: 100%;
     border: 2px solid #333;
     border-radius: 10px;
+   
+    margin-top: 1px;
+    
     }
 
 

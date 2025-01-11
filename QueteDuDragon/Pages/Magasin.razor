@@ -14,6 +14,7 @@ else
     <h3>Magasin </h3>
     <p>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</p>
 
+    
     <p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
     <p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
     
@@ -23,8 +24,7 @@ else
 
 
 
-    <div style="background-image: url('../wwwroot/images/marchand/mag.jpg');
-background-size: cover; padding: 20px; border: 2px solid #333; border-radius: 10px;">
+    <div>
         @foreach (var item in MagasinObjets)
         {
             <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
@@ -58,19 +58,19 @@ background-size: cover; padding: 20px; border: 2px solid #333; border-radius: 10
 
     private void Retourner()
     {
-        Console.WriteLine("Retourner appelé");
-        if (EtatJeu.SelectedMode == "Facile")
+
+        if (EtatJeu.SelectedMode == "/mode-facile")
         {
             Console.WriteLine("Retourner appelé");
-            Navigation.NavigateTo("/mode-facile",true);
-           
+            Navigation.NavigateTo("/mode-facile", true);
+
 
         }
-        else if (EtatJeu.SelectedMode == "Difficile")
+        else if (EtatJeu.SelectedMode == "/mode-difficile")
         {
             Navigation.NavigateTo("/mode-difficile",true);
         }
-    }
+    } //** a refaire
 
 
 

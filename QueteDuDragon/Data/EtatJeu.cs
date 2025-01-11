@@ -9,7 +9,7 @@ public class EtatJeu
     public Hero SelectedHero { get; set; }
     public EtatJeu()
     {
-        SelectedHero = new Warrior { Name = "Héros par défaut" }; // Exemple de valeur par défaut
+        SelectedHero = new Warrior { Name = "Guerrier" }; // Exemple de valeur par défaut
     }
 
     public Dragon bossFinal { get; set; } = new Dragon(); // Initialisation du BossFinal
@@ -21,8 +21,9 @@ public class EtatJeu
     public int CombatTurns { get; set; } = 0;
     public const int MaxTurns = 10;
 
-    public string SelectedMode { get; set; } = ""; // mode de jeu (facile, difficile)
+    public string SelectedMode { get; set; } = "";// mode de jeu (facile, difficile)
 
+    
     public void SelectHero(Hero hero)
     {
         SelectedHero = hero; 
@@ -70,12 +71,14 @@ public class EtatJeu
             
         }
     }
+    
     public void SetMode(string mode)
     {
-        if (mode != "Facile" && mode != "Difficile")
+        if (mode != "/mode-facile" && mode != "/mode-difficile")
         {
             throw new ArgumentException("Mode invalide");
         }
         SelectedMode = mode;
     }
+    
 }
