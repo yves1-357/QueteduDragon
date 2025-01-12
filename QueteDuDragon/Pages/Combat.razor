@@ -4,24 +4,24 @@
 @inject NavigationManager Navigation
 @page "/combat"
 
-<h3>Combat contre @EtatJeu.bossFinal.Name </h3>
+<h3>Combat contre @EtatJeu.BossFinal.Name </h3>
 
-@if (EtatJeu.SelectedHero == null || EtatJeu.bossFinal == null)
+@if (EtatJeu.SelectedHero == null || EtatJeu.BossFinal == null)
 {
     <p>Erreur : Impossible de commencer le combat. Vérifiez que tout est correctement initialisé.</p>
     
 }
-else if (!EtatJeu.IscombatActive)
+else if (!EtatJeu.IsCombatActive)
 {
-    <p>Le combat est terminé:! @((EtatJeu.bossFinal.pointsVie <= 0) ? "Vous avez vaincu le bossFinal!":"Vous avez été vaincus par le bossFinal.")</p>
+    <p>Le combat est terminé:! @((EtatJeu.BossFinal.pointsVie <= 0) ? "Vous avez vaincu le bossFinal!":"Vous avez été vaincus par le bossFinal.")</p>
     <button @onclick="RetournerAuchoixBoss">Retour au choix boss/magasin</button>
 }
 else
 {
     <p>Héros : @EtatJeu.SelectedHero.Name</p>
     <p>Points de vie  du Heros: @EtatJeu.SelectedHero.pointsVie</p>
-    <p>BossFinal :@EtatJeu.bossFinal.Name</p>
-    <p>Points de vie du BossFinal : @EtatJeu.bossFinal.pointsVie</p>
+    <p>BossFinal :@EtatJeu.BossFinal.Name</p>
+    <p>Points de vie du BossFinal : @EtatJeu.BossFinal.pointsVie</p>
     
     <h4>Vos compétences:</h4>
     <div>
@@ -47,7 +47,7 @@ else
 
     private void UseSkill(string skill)
     {
-        if (EtatJeu.bossFinal.TryEvade())
+        if (EtatJeu.BossFinal.TryEvade())
         {
             combatLog = $"Le bossFinal esquive l'attaque {skill}";
             BossAttack();
@@ -55,7 +55,7 @@ else
         }
 
         int damage = EtatJeu.SelectedHero.UseSkill(skill);
-        EtatJeu.bossFinal.TakeDamage(damage);
+        EtatJeu.BossFinal.TakeDamage(damage);
         combatLog = $"{EtatJeu.SelectedHero.Name} utilise {skill} et inflige {damage} point de degats au bossFinal.";
 
         BossAttack(); // Contre-attaque du BossFinal
@@ -64,7 +64,7 @@ else
     private void UseTool(string tool)
     {
         int damage = EtatJeu.SelectedHero.UseTool(tool);
-        EtatJeu.bossFinal.TakeDamage(damage);
+        EtatJeu.BossFinal.TakeDamage(damage);
         combatLog = $"{EtatJeu.SelectedHero.Name} utilise {tool} et inflige {damage} point de degats au bossFinal.";
 
         BossAttack();
@@ -83,7 +83,7 @@ else
         {
             combatLog += "\n Defaite... Le bossFinal vous a vaincu.";
         }
-        else if (EtatJeu.bossFinal.pointsVie <= 0)
+        else if (EtatJeu.BossFinal.pointsVie <= 0)
         {
             combatLog += "\nVictoire ! Vous avez vaincu le BossFinal.";
         }
@@ -92,7 +92,7 @@ else
 
     private void RetournerAuchoixBoss()
     {
-        EtatJeu.IscombatActive = false;
+        EtatJeu.IsCombatActive = false;
         Navigation.NavigateTo("/choix-boss"); 
     }
 

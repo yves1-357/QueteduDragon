@@ -1,84 +1,133 @@
-﻿namespace QueteDuDragon.Data;
-
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using QueteDuDragon.Data.Heroes;
 using QueteDuDragon.Data.bossFinal;
 
-
-public class EtatJeu
+namespace QueteDuDragon.Data
 {
-    public Hero SelectedHero { get; set; }
-    public EtatJeu()
+    public class EtatJeu : INotifyPropertyChanged
     {
-        SelectedHero = new Warrior { Name = "Guerrier" }; // Exemple de valeur par défaut
-    }
-
-    public Dragon bossFinal { get; set; } = new Dragon(); // Initialisation du BossFinal
-
-    public List<string> objetsCollectes { get; private set; } = new List<string>();  // Suivi des objets collectés
-
-    public bool IscombatActive { get; set; } = false; // etat du combat
-    
-    public int CombatTurns { get; set; } = 0;
-    public const int MaxTurns = 10;
-
-    public string SelectedMode { get; set; } = "";// mode de jeu (facile, difficile)
-
-    
-    public void SelectHero(Hero hero)
-    {
-        SelectedHero = hero; 
-    }
-
-    public void StartCombat() // methode (demarrer le combat)
-    {
-        if (SelectedHero == null)
-        {
-            throw new InvalidOperationException("Aucun héros sélectionné.");
-        }
-
-        IscombatActive = true;
-        bossFinal = new Dragon(); // reinitialise le boss au debut du combat
-        //bossFinal.InitializeSkills(); // Si nécessaire pour initialiser les compétences du boss
         
-
-    }
-
-    public void EndCombat()
-    {
-        IscombatActive = false;
-    }
-
-    public void objetsCollecte(string Collecte)
-    {
-        objetsCollectes.Add(Collecte);
-
-        if (objetsCollectes.Count >= 4) // Possibilité de déclencher un combat si 4 objets sont collectés
+        private Hero selectedHero;
+        public Hero SelectedHero
         {
-            StartCombat();
-            // aller au magasin ( à rajouter)
+            get => selectedHero;
+            set
+            {
+                if (selectedHero != value)
+                {
+                    selectedHero = value;
+                    OnPropertyChanged(nameof(SelectedHero));
+                }
+            }
         }
-    }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
 
-
-
-    public void IncrementCombatTurns()
-    {
-        CombatTurns++;
-        if (CombatTurns >= MaxTurns)
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            EndCombat();
-            throw new InvalidOperationException("Vous avez dépassé la limite de tours. Le bossFinal vous a vaincu:!");
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private Dragon bossFinal = new Dragon();
+        public Dragon BossFinal
+        {
+            get => bossFinal;
+            set
+            {
+                bossFinal = value;
+                OnPropertyChanged(nameof(BossFinal));
+            }
+        }
+
+        public List<string> objetsCollectes = new List<string>();
+        public List<string> ObjetsCollectes => objetsCollectes;
+
+        private bool isCombatActive ;
+        public bool IsCombatActive
+        {
+            get => isCombatActive;
+            set
+            {
+                isCombatActive = value;
+                OnPropertyChanged(nameof(IsCombatActive));
+            }
+        }
+
+        private int combatTurns ;
+        public int CombatTurns
+        {
+            get => combatTurns;
+            set
+            {
+                combatTurns = value;
+                OnPropertyChanged(nameof(CombatTurns));
+            }
+        }
+
+        private string selectedMode = "";
+        public string SelectedMode
+        {
+            get => selectedMode;
+            set
+            {
+                selectedMode = value;
+                OnPropertyChanged(nameof(SelectedMode));
+            }
+        }
+
+        public const int MaxTurns = 10;
+
+        public EtatJeu()
+        {
             
         }
-    }
-    
-    public void SetMode(string mode)
-    {
-        if (mode != "/mode-facile" && mode != "/mode-difficile")
+
+        public void SelectHero(Hero hero)
         {
-            throw new ArgumentException("Mode invalide");
+            SelectedHero = hero;
         }
-        SelectedMode = mode;
+
+        public void StartCombat()
+        {
+            if (SelectedHero == null)
+            {
+                throw new InvalidOperationException("Aucun héros sélectionné.");
+            }
+
+            IsCombatActive = true;
+            BossFinal = new Dragon(); // Réinitialise le boss au début du combat
+        }
+
+        public void EndCombat()
+        {
+            IsCombatActive = false;
+        }
+
+        public void AjouterObjetCollecte(string collecte)
+        {
+            ObjetsCollectes.Add(collecte);
+            OnPropertyChanged(nameof(ObjetsCollectes));
+        }
+
+        public void IncrementCombatTurns()
+        {
+            CombatTurns++;
+            if (CombatTurns >= MaxTurns)
+            {
+                EndCombat();
+                throw new InvalidOperationException("Vous avez dépassé la limite de tours. Le bossFinal vous a vaincu!");
+            }
+        }
+
+        public void SetMode(string mode)
+        {
+            if (mode != "Facile" && mode != "Difficile")
+            {
+                throw new ArgumentException("Mode invalide");
+            }
+            SelectedMode = mode;
+        }
+        
     }
-    
 }

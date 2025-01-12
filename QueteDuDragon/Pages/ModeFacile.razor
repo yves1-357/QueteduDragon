@@ -3,21 +3,80 @@
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
+
 <h3>Mode Facile</h3>
 <p>Bienvenue dans le mode facile !</p>
-<br>
+<p>
 Préparez-vous à affronter le BossFinal et collecter des objets
-<br/>
+</p>
+<div style="display: flex; height: 1vh;">
+</div>
+    <!-- Cadre à gauche -->
 
-<button @onclick="AllerAuMagasin">Aller au Magsin </button>
+<div  style="width: 25%; background-color: black; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
+    
+    
+<h3>Informations sur le personnage</h3>
+    
+  @if (EtatJeu.SelectedHero != null)
+  {
+      <p><strong>Nom du personnage :</strong> @EtatJeu.SelectedHero.Name</p>
+      <p><strong>Nom héros sélectionné :</strong> @EtatJeu.SelectedHero.GetType().Name</p>
+      <p><strong>Points de vie :</strong> @EtatJeu.SelectedHero.pointsVie</p>
+      <p><strong>Niveau actuel :</strong> @EtatJeu.SelectedHero.Level</p>
+      <p><strong>Compétences :</strong></p>
+      
+      <ul>
+          @foreach (var skill in EtatJeu.SelectedHero?.Skills)
+          {
+              <li>@skill</li>
+          }
+      </ul>
+      
+      <p><strong>Objets collectés:</strong></p>
+      <ul>
+          @foreach (var item in EtatJeu.objetsCollectes)
+          {
+              <li>@item</li>
+          }
+      </ul>
+      
+      <p><strong>Niveau d'Expérience :</strong>@GetExperienceLevel()</p>
+      
+      <button @onclick="AllerAuMagasin">Aller au Magsin </button>
+  }
 
-@code{
+  else
+  {
+      <p>Erreur : Aucune information sur le héros disponible. Veuillez sélectionner un héros.</p>
+  }
+
+</div>
+
+<!-- Partie centrale et droite -->
+<div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
+    <h3>La carte viendra ici prochainement.</h3>
+</div>
+
+  
+
+  @code{
 
     private void AllerAuMagasin()
     {
         Navigation.NavigateTo("/marchand");
+        StateHasChanged();
     }
-    
- 
 
-}
+
+    private string GetExperienceLevel()
+    {
+        int nbObjets = EtatJeu.objetsCollectes.Count;
+        {
+            if (nbObjets >= 7) return " 3 ";
+            if (nbObjets >= 4) return " 2 ";
+            return " 1 ";
+        }
+    }
+
+  }

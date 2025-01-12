@@ -2,7 +2,13 @@
 
 public class Thief : Hero
     {
-        public Thief(): base("Voleur"){}
+        public Thief() : base("Voleur")
+        {
+            
+            pointsVie = 5;
+            Level = 1;
+            Skills = new List<string> {"Flèche empoisonnée" ,"Piège","Disparition"  };
+        }
         public override void InitializeSkills()
         {
             Skills.Add("Flèche empoisonnée");

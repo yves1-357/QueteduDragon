@@ -8,17 +8,17 @@
 
 <form @onsubmit="HandleFormSubmit">
     <label for="hero-name">Nom du héros:</label>
-    <input type="text" id="hero-name"@Bind="HeroName" placeholder="Entrez votre nom" required/>
+    <input type="text" id="hero-name" @bind="HeroName" placeholder="Entrez votre nom" required/>
 
     <label for="hero-choice">Choix du héros :</label>
-    <select id="hero-choice" @bind="HeroType" required>
+    <select id="hero-choice" @bind="HeroType">
         <option value="Warrior">Guerrier</option>
         <option value="Mage">Mage</option>
         <option value="Thief">Voleur</option>
     </select>
 
     <label for="mode">Mode :</label>
-    <select id="mode" @bind="GameMode" required>
+    <select id="mode" @bind="GameMode" >
         <option value="Facile">Facile</option>
         <option value="Difficile">Difficile</option>
     </select>
@@ -31,66 +31,35 @@
     <p style="color:red;">@ErrorMessage</p>
 }
 
-
 @code {
 
-    private string HeroName { get; set; } = String.Empty;
+    private string HeroName { get; set; } = "";
     private string HeroType { get; set; } = "Warrior"; // Valeur par défaut
     private string GameMode { get; set; } = "Facile"; // Valeur par défaut
     private string? ErrorMessage { get; set; }
-
-
+    
     private void HandleFormSubmit()
     {
-        if (EtatJeu.SelectedHero == null)
-        {
-            ErrorMessage = "Erreur : Héros non défini.";
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(HeroName))
-        {
-            ErrorMessage = "veuillez entrer un nom pour votre heros.";
-            return;
-
-        }
-
-        try
-        {
-
         // Création du héros basé sur les entrées du formulaire
-    Hero selectedHero = HeroType switch
-    {
-        "Warrior" => new Warrior { Name = HeroName },
-        "Mage" => new Mage { Name = HeroName },
-        "Thief" => new Thief { Name = HeroName },
-        _ => throw new InvalidOperationException("Type de héros invalide.")
-    };
-    
-    // Initialiser les compétences du héros
-    selectedHero.InitializeSkills();
-
-    //mettre a jour l'etat du jeu
+        Hero selectedHero = HeroType switch
+        {
+            "Warrior" => new Warrior { Name = HeroName },
+            "Mage" => new Mage { Name = HeroName },
+            "Thief" => new Thief { Name = HeroName },
+            _ => throw new InvalidOperationException("Type de héros invalide.")
+        };
+        
+        //mettre a jour l'etat du jeu
         EtatJeu.SelectedHero = selectedHero;
+        EtatJeu.SelectedHero.InitializeSkills();
         EtatJeu.SelectedMode = GameMode;
         
-       Console.WriteLine($"Heros selectionée:{HeroName} ({HeroType})");
-       Console.WriteLine($"Mode sélectionné : {GameMode}");
-    
-    // Rediriger selon le mode sélectionné
-    if (GameMode == "Facile")
-    {
-        NavigationManager.NavigateTo("/mode-facile");
+        // Forcer la mise à jour de l'interface utilisateur
+        StateHasChanged();
+        // Redirection
+        NavigationManager.NavigateTo(GameMode == "Facile" ? "/mode-facile" : "/mode-difficile");
+        // Rediriger selon le mode sélectionné
+        
     }
-    else
-    {
-        NavigationManager.NavigateTo("/mode-difficile");
-    }
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"Erreur lors de la création du héros : {ex.Message}";
-            Console.WriteLine(ErrorMessage);
-        }
-    }
+
 }
