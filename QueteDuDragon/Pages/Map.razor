@@ -1,8 +1,15 @@
 @page "/"
 
 @code {
-    private int treasureRow;
-    private int treasureCol;
+    private List<(int row, int col)> treasureLocations = new List<(int row, int col)>()
+    {
+        (2, 5),
+        (10, 10),
+        (6, 15),
+        (4, 8),
+        (12, 3),
+        (8, 18)
+    };
     private List<(int row, int col)> dungeonLocations = new List<(int row, int col)>()
     {
         (1, 1),
@@ -10,25 +17,15 @@
         (13, 1),
         (13, 18)
     };
-    private Random random = new Random();
-
-    protected override void OnInitialized()
-    {
-        PlaceTreasure();
-    }
-
-    private void PlaceTreasure()
-    {
-        do
-        {
-            treasureRow = random.Next(0, 15);
-            treasureCol = random.Next(0, 20);
-        } while (IsMountain(treasureRow, treasureCol) || (treasureRow == 7 && treasureCol == 10) || dungeonLocations.Contains((treasureRow, treasureCol)));
-    }
 
     private bool IsMountain(int row, int col)
     {
         return row == 0 || row == 14 || col == 0 || col == 19;
+    }
+
+    private bool IsTreasure(int row, int col)
+    {
+        return treasureLocations.Contains((row, col));
     }
 }
 
@@ -38,13 +35,31 @@
         @for (int col = 0; col < 20; col++)
         {
             <div class="cellule">
-                @if (row == treasureRow && col == treasureCol)
+                @if (IsTreasure(row, col))
                 {
                     <img src="Images/Tresor.png" alt="Tresor" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
-                else if (dungeonLocations.Contains((row, col)))
+                else if (row == 1 && col == 1)
                 {
-                    <a href="donjon">
+                    <a href="donjon1">
+                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    </a>
+                }
+                else if (row == 1 && col == 18)
+                {
+                    <a href="donjon2">
+                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    </a>
+                }
+                else if (row == 13 && col == 1)
+                {
+                    <a href="donjon3">
+                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    </a>
+                }
+                else if (row == 13 && col == 18)
+                {
+                    <a href="donjon4">
                         <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
                     </a>
                 }
@@ -52,14 +67,16 @@
                 {
                     <img src="Images/Montagne.png" alt="Montagne" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
-                else if (row == 7 && col == 09)
+                else if (row == 7 && col == 9)
                 {
                     <img src="Images/shop.png" alt="Shop" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
-            else if (row == 5 && col == 09) 
-            {
-                <img src="Images/Medieval.png" alt="Medieval" style="width: 100%; height: 100%; object-fit: cover;"/>
-            }
+                else if (row == 5 && col == 9)
+                {
+                    <a href="/Donjonboss">
+                        <img src="Images/DonjonBoss.png" alt="donjonboss" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    </a>
+                }
                 else
                 {
                     <img src="Images/Plaine.png" alt="Plaine" style="width: 100%; height: 100%; object-fit: cover;"/>
