@@ -38,9 +38,13 @@
     private string GameMode { get; set; } = "Facile"; // Valeur par défaut
     private string? ErrorMessage { get; set; }
     
+    public Hero SelectedHero { get; set; }
+    
+
+    
     private void HandleFormSubmit()
     {
-        // Création du héros basé sur les entrées du formulaire
+        
         Hero selectedHero = HeroType switch
         {
             "Warrior" => new Warrior { Name = HeroName },
@@ -49,17 +53,24 @@
             _ => throw new InvalidOperationException("Type de héros invalide.")
         };
         
+       // selectedHero.InitializeSkills();
+        
         //mettre a jour l'etat du jeu
         EtatJeu.SelectedHero = selectedHero;
-        EtatJeu.SelectedHero.InitializeSkills();
         EtatJeu.SelectedMode = GameMode;
         
-        // Forcer la mise à jour de l'interface utilisateur
+        Console.WriteLine($"Héros sélectionné : {selectedHero.Name} ({HeroType})");
+        Console.WriteLine($"Mode sélectionné : {GameMode}");
+        Console.WriteLine($"EtatJeu.SelectedHero : {EtatJeu.SelectedHero.Name}");
+      
+        // Forcer la mise à jour
         StateHasChanged();
         // Redirection
         NavigationManager.NavigateTo(GameMode == "Facile" ? "/mode-facile" : "/mode-difficile");
         // Rediriger selon le mode sélectionné
         
     }
+ 
+    
 
 }

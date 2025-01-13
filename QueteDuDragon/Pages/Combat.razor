@@ -4,7 +4,7 @@
 @inject NavigationManager Navigation
 @page "/combat"
 
-<h3>Combat contre @EtatJeu.BossFinal.Name </h3>
+<h3>Combat contre @EtatJeu.BossFinal?.Name </h3>
 
 @if (EtatJeu.SelectedHero == null || EtatJeu.BossFinal == null)
 {
@@ -13,7 +13,7 @@
 }
 else if (!EtatJeu.IsCombatActive)
 {
-    <p>Le combat est terminé:! @((EtatJeu.BossFinal.pointsVie <= 0) ? "Vous avez vaincu le bossFinal!":"Vous avez été vaincus par le bossFinal.")</p>
+    <p>Le combat est terminé:! @((EtatJeu.BossFinal?.pointsVie ?? 0) <= 0 ? "Vous avez vaincu le bossFinal!":"Vous avez été vaincus par le bossFinal.")</p>
     <button @onclick="RetournerAuchoixBoss">Retour au choix boss/magasin</button>
 }
 else
@@ -25,7 +25,7 @@ else
     
     <h4>Vos compétences:</h4>
     <div>
-        @foreach (var skill in EtatJeu.SelectedHero.Skills)
+        @foreach (var skill in EtatJeu.SelectedHero.Skills  ?? Enumerable.Empty<string>())
         {
             <button @onclick="() => UseSkill(skill)">@skill</button>
         }
@@ -33,7 +33,7 @@ else
     
     <h4>Vos outils:</h4>
     <div>
-        @foreach (var tool in EtatJeu.SelectedHero.Tools)
+        @foreach (var tool in EtatJeu.SelectedHero.Tools  ?? Enumerable.Empty<string>())
         {
             <button @onclick="() => UseTool(tool)">@tool</button>
         }
@@ -47,6 +47,11 @@ else
 
     private void UseSkill(string skill)
     {
+        if (EtatJeu.BossFinal == null || EtatJeu.SelectedHero == null)
+        {
+            combatLog = "Erreur : Héros ou Boss non initialisés.";
+            return;
+        }
         if (EtatJeu.BossFinal.TryEvade())
         {
             combatLog = $"Le bossFinal esquive l'attaque {skill}";
@@ -58,20 +63,43 @@ else
         EtatJeu.BossFinal.TakeDamage(damage);
         combatLog = $"{EtatJeu.SelectedHero.Name} utilise {skill} et inflige {damage} point de degats au bossFinal.";
 
+        
+        if (EtatJeu.BossFinal.pointsVie <= 0)
+        {
+            combatLog += "\nVictoire ! Vous avez vaincu le BossFinal.";
+            EtatJeu.IsCombatActive = false;
+            return;
+        }
         BossAttack(); // Contre-attaque du BossFinal
     }
 
     private void UseTool(string tool)
     {
+        if (EtatJeu.BossFinal == null || EtatJeu.SelectedHero == null)
+        {
+            combatLog = "Erreur : Héros ou Boss non initialisés.";
+            return;
+        }
         int damage = EtatJeu.SelectedHero.UseTool(tool);
         EtatJeu.BossFinal.TakeDamage(damage);
         combatLog = $"{EtatJeu.SelectedHero.Name} utilise {tool} et inflige {damage} point de degats au bossFinal.";
 
+        if (EtatJeu.BossFinal.pointsVie <= 0)
+        {
+            combatLog += "\nVictoire ! Vous avez vaincu le BossFinal.";
+            EtatJeu.IsCombatActive = false;
+            return;
+        }
         BossAttack();
     }
 
     private void BossAttack()
     {
+        if (EtatJeu.BossFinal == null || EtatJeu.SelectedHero == null)
+        {
+            combatLog = "Erreur : Héros ou Boss non initialisés.";
+            return;
+        }
         EtatJeu.IncrementCombatTurns();
 
         Random random = new Random();
@@ -82,10 +110,12 @@ else
         if (EtatJeu.SelectedHero.pointsVie <= 0)
         {
             combatLog += "\n Defaite... Le bossFinal vous a vaincu.";
+            EtatJeu.IsCombatActive = false;
         }
         else if (EtatJeu.BossFinal.pointsVie <= 0)
         {
             combatLog += "\nVictoire ! Vous avez vaincu le BossFinal.";
+            EtatJeu.IsCombatActive = false;
         }
 
     }

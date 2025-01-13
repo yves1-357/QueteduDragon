@@ -1,5 +1,4 @@
 ﻿@using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 @page "/choix-boss"
@@ -26,7 +25,7 @@
             Navigation.NavigateTo("/combat");
         }
     
-    catch (Exception ex)
+    catch (Exception )
     {
         Console.WriteLine(@"Erreur pendant le demarrage du combat: {ex.
         Message}");

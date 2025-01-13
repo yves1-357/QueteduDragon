@@ -1,6 +1,8 @@
 ﻿@page "/"
+@using QueteDuDragon.Data
 @using QueteDuDragon.Data.Heroes;
 @inject NavigationManager NavigationManager
+@inject EtatJeu EtatJeu
 
 <header>
     <h1>Quête du Dragon</h1>
@@ -11,48 +13,43 @@
         <section class="instructions">
             <h2>Fonctionnement du jeu</h2>
             <p>
-            
                 Bienvenue dans la Quête du Dragon ! Choisissez un héros parmi Guerrier, Mage ou Voleur,
                 puis partez à l'aventure. Collectez des objets, améliorez vos compétences et affrontez
                 des ennemis redoutables.
                 
                 <br>
-                il y'a deux modes differentes:
+                Deux modes disponibles:
                 <br/>
                 
-                
-
                 <br>
                 Facile: Collectez des objets jusqu'au 1er Niveau puis Affronter le BossFinal.
                 <br/>
 
                 <br>
-                Difficile : Collectez des objets, Affronter les monstres, Gagner de l'experience , Affronter le bossFinal avec plus de chances.
+                Difficile :  Plus de défis avant d'affronter le BossFinal.
                 <br/>
 
                 <br>Décidez de jouer en mode facile ou difficile. Bonne chance !<br/>
-
-            
-
+                
             </p>
         </section>
     </div>
 
     <aside class="hero-selection">
-        <h3>Personnage</h3>
+        <h3>Créer votre personnage </h3>
         <form @onsubmit="HandleFormSubmit">
-            <label for="hero-name">Nom du personnage :</label>
-            <input type="text" id="hero-name" @bind="HeroName" placeholder="Entrez votre nom" required />
+            <label>Nom du personnage :</label>
+            <input type="text"  @bind="HeroName" placeholder="Entrez votre nom" required />
 
-            <label for="hero-choice">Choix du héros :</label>
-            <select id="hero-choice" @bind="HeroType" required>
+            <label>Choix du héros :</label>
+            <select @bind="HeroType" required>
                 <option value="Warrior">Guerrier</option>
                 <option value="Mage">Mage</option>
                 <option value="Thief">Voleur</option>
             </select>
 
-            <label for="mode">Mode :</label>
-            <select id="mode" @bind="GameMode" required>
+            <label>Mode :</label>
+            <select @bind="GameMode" required>
                 <option value="Facile">Facile</option>
                 <option value="Difficile">Difficile</option>
             </select>
@@ -66,47 +63,45 @@
     <p>&copy; 2025 Quête du Dragon. Tous droits réservés.</p>
 </footer>
 
-@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <p style="color: red;">@ErrorMessage</p>
 }
 
 @code {
-    private string HeroName { get; set; } = string.Empty;
+    private string HeroName { get; set; } = "";
     private string HeroType { get; set; } = "Warrior"; // Valeur par défaut
     private string GameMode { get; set; } = "Facile"; // Valeur par défaut
     private string? ErrorMessage { get; set; }
 
     private void HandleFormSubmit()
     {
-        if (string.IsNullOrWhiteSpace(HeroName))
+        try
         {
-            ErrorMessage = "Veuillez entrer un nom pour votre héros.";
-            return;
+            Hero selectedHero = HeroType switch
+            {
+                "Warrior" => new Warrior { Name = HeroName },
+                "Mage" => new Mage { Name = HeroName },
+                "Thief" => new Thief { Name = HeroName },
+                _ => throw new InvalidOperationException("Type de héros invalide.")
+            };
+            
+            if (selectedHero.Skills.Count == 0) // Éviter l'ajout en double
+            {
+                selectedHero.InitializeSkills();
+            }
+            
+            EtatJeu.SelectedHero = selectedHero;
+            EtatJeu.SelectedMode = GameMode;
+            // Rediriger vers la page selon le mode
+
+            NavigationManager.NavigateTo(GameMode == "Facile" ? "/mode-facile" : "/mode-difficile");
         }
-
-        // Création du héros basé sur le type sélectionné
-        Hero selectedHero = HeroType switch
+        catch (Exception ex)
         {
-            "Warrior" => new Warrior { Name = HeroName },
-            "Mage" => new Mage { Name = HeroName },
-            "Thief" => new Thief { Name = HeroName },
-            _ => throw new InvalidOperationException("Type de héros invalide.")
-        };
-
-        selectedHero.InitializeSkills();
-
-        Console.WriteLine($"Héros sélectionné : {HeroName} ({HeroType})");
-        Console.WriteLine($"Mode sélectionné : {GameMode}");
-
-        // Rediriger vers la page selon le mode
-        if (GameMode == "Facile")
-        {
-            NavigationManager.NavigateTo("/mode-facile");
-        }
-        else
-        {
-            NavigationManager.NavigateTo("/mode-difficile");
+            ErrorMessage = $"Erreur:{ex.Message}";
+            ;
         }
     }
 }
+

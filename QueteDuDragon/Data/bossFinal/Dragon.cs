@@ -4,7 +4,7 @@ using QueteDuDragon.Data.Heroes;
 public class Dragon : BossFinal
 {
     public  string Name { get; set; } = "Dragon de feu";
-    public  int pointsVie { get; set; } =  100; // Nombre eleves de points pour le mode 'facile'
+    public  new int pointsVie { get; set; } =  100; // Nombre eleves de points pour le mode 'facile'
 
     public List<string> Skills { get; set; } = new List<string>
         { "Puissant crache feu", "Griffes tranchantes", "Rugissement terrifiant" };

@@ -50,7 +50,7 @@ else
 
     private void AcheterObjet(string objet)
     {
-        if (EtatJeu.objetsCollectes.Count < EtatJeu.SelectedHero.AllowedPurchases)
+        if (EtatJeu.objetsCollectes.Count < EtatJeu.SelectedHero?.AllowedPurchases)
         {
             EtatJeu.objetsCollectes.Add(objet);
             EtatJeu.SelectedHero.Skills.Add(objet); // Ajouter à ses compétences
