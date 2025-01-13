@@ -86,7 +86,7 @@
                 _ => throw new InvalidOperationException("Type de héros invalide.")
             };
             
-            if (selectedHero.Skills.Count == 0) // Éviter l'ajout en double
+            if (selectedHero.Skills.Count == 0) // Évite l'ajout en double
             {
                 selectedHero.InitializeSkills();
             }
