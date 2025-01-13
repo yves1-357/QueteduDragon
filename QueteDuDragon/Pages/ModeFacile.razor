@@ -47,6 +47,7 @@
       
     
           <button @onclick="AllerAuMagasin">Aller au Magasin </button>
+          <button @onclick="Retourner">Accueil</button>
 
       </section>
       
@@ -84,6 +85,11 @@
             if (nbObjets >= 4) return " 2 ";
             return " 1 ";
         }
+    }
+    
+    private void Retourner()
+    {
+        Navigation.NavigateTo("/"); 
     }
 
 }
