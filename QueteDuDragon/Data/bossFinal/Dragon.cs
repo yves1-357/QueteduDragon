@@ -3,8 +3,8 @@ using QueteDuDragon.Data.Heroes;
 
 public class Dragon : BossFinal
 {
-    public new string Name { get; set; } = "Dragon de feu";
-    public new int pointsVie { get; set; } =  500; // Nombre eleves de points pour le mode 'facile'
+    public  string Name { get; set; } = "Dragon de feu";
+    public  new int pointsVie { get; set; } =  100; // Nombre eleves de points pour le mode 'facile'
 
     public List<string> Skills { get; set; } = new List<string>
         { "Puissant crache feu", "Griffes tranchantes", "Rugissement terrifiant" };
@@ -35,10 +35,28 @@ public class Dragon : BossFinal
     public bool TryEvade() // chance d'esquiver en pourcentage
     {
         Random random = new Random();
-        return random.Next(0, 100) < 20; 
+        return random.Next(0, 100) < 20;  // 20% de chance d'esquiver
     }
    public override void InitializeSkills() 
    {
         // Initialise les compétences spécifiques au Dragon
     }
-    }
+
+   public int UseSkill(string skill)
+   {
+       return skill switch
+       {
+           "Puissant crache feu" => 15,
+           "Griffes tranchantes" => 20,
+           "Rugissement terrifiant" => 10,
+           _ => 5
+       };
+   }
+
+   public string ChooseSkill()
+   {
+       Random random = new Random();
+       return Skills[random.Next(Skills.Count)];
+   }
+   
+}

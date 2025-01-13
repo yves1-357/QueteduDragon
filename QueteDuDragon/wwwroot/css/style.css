@@ -1,0 +1,115 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color:  #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    /* Ajouter l'image de fond */
+    background-image: url('../images/background/human.jpg'); /* Chemin vers l'image */
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-attachment: fixed; /* L'image reste fixe lors du défilement */
+    background-repeat: no-repeat; /* Ne pas répéter l'image */
+}
+
+h1, h3, h4, h5, h6 {
+    margin: 0 0 10px;
+    color:yellow;
+    font-weight: bold;
+}
+h3{
+    margin: 0 0 10px;
+    color:yellow;
+    font-weight: bold;
+}
+
+h2{
+    margin: 0 0 10px;
+    color:#2e4053;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#combat-log {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 15px 0;
+    max-height: 200px;
+    overflow-y: scroll;
+    background-color: #f9f9f9;
+}
+.game-info {
+    border: 2px solid #ccc; /* Bordure grise */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 16px; /* Espace intérieur */
+    background-color: rgba(255, 255, 255, 0.8); /* Fond blanc avec légère transparence */
+    max-width: 600px; /* Limite la largeur */
+    margin: 20px auto; /* Centrage horizontal */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre */
+}
+
+.game-info h3 {
+    color: rgba(0, 0, 0, 0.7); /* Couleur du titre */
+    margin-bottom: 10px; /* Espacement sous le titre */
+}
+
+.game-info p {
+    line-height: 1.6; /* Espacement entre les lignes */
+    color: #555; /* Couleur du texte */
+}
+
+.label{
+    background-color: yellow;
+}
+
+footer {
+  
+    color: whitesmoke;
+    text-align: center;
+    padding: 10px;
+}
+.background-image {
+    background-image: url('../images/marchand/mag.jpg');
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-attachment: fixed; /* L'image reste fixe lors du défilement */
+    background-repeat: no-repeat; /* Ne pas répéter l'image */
+    height:300px;
+    width: 100%;
+    border: 2px solid #333;
+    border-radius: 10px;
+   
+    margin-top: 1px;
+    
+    }
+
+
+
+

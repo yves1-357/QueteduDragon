@@ -2,7 +2,12 @@
 
 public class Mage : Hero
     {
-        public Mage(): base("Mage"){}
+        public Mage() : base("Mage")
+        {
+            pointsVie = 5;
+            Level = 1;
+            Skills = new List<string> { "Boule de feu","Soigné les blessés", "Bouclier magique" };
+        }
         public override void InitializeSkills()
         {
             Skills.Add("Boule de feu");
