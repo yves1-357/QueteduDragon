@@ -192,7 +192,7 @@ else
             {
                 hasWon = true;
                 victory = true;
-                victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et gagner 5 points de plus.";
+                victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner despoints de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
             }
             else 
@@ -226,13 +226,14 @@ else
         }
     }
 
+    
     private async Task RestartGame()
     {
         if (chancesRestantes > 0)
         {
             chancesRestantes--;
             showPopup = true;
-            popupMessage = "Il vous reste 1 chance !";
+            //popupMessage = "Il vous reste 1 chance !";
 
             //fermature du pop up et retour au jeu
             await Task.Delay(1500);
