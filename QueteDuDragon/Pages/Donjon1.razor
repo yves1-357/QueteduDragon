@@ -1,15 +1,30 @@
 @page "/donjon1"
+@using QueteDuDragon.Data
+@inject NavigationManager Navigation
 
     <div class="dungeon">
     </div>
 
-    <style>
+<style>
     .dungeon {
         width: 100%;
-        height: 100vh;
+        height: 80vh;
         background-image: url('Images/Fondcombat.jpg');
         background-size: cover;
         background-position: center;
     }
     </style>
+
+<section>
+    <button @onclick="Retourner">Retour</button>
+</section>
+
+
+@code{
+
+    private void Retourner()
+    {
+        Navigation.NavigateTo("/mode-facile");
+    }
+
 }
