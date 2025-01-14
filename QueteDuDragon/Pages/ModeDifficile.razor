@@ -8,13 +8,13 @@
 
 <div style="display: flex; height: 90vh;">
     <!-- Cadre à gauche -->
-    <div style="width: 25%; background-color: darkred; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
+    <div style="width: 45%; background-color: darkred; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
         @if (EtatJeu.SelectedHero != null)
         {
             <section>
-                <h3>Informations sur le personnage</h3>
+                <img src="Images/genie/@EtatJeu.SelectedHero.ImageName"alt="Héros" class="hero-image"/>
                 <p><strong>Nom du personnage :</strong> @EtatJeu.SelectedHero.Name</p>
-                <p><strong>Nom héros sélectionné :</strong> @EtatJeu.SelectedHero.GetType().Name</p>
+                <p><strong>Héros :</strong> @EtatJeu.SelectedHero.GetType().Name</p>
                 <p><strong>Points de vie :</strong> @EtatJeu.SelectedHero.pointsVie</p>
                 <p><strong>Niveau actuel :</strong> @EtatJeu.SelectedHero.Level</p>
                 <p><strong>Compétences :</strong></p>
@@ -125,6 +125,12 @@
         width: 40%;
         height: 80%;
         object-fit: cover;
+    }
+
+    .hero-image {
+        width: 180px;
+        height: auto;
+        margin: 10px;
     }
 </style>
 
