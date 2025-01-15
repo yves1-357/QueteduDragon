@@ -1,4 +1,4 @@
-@page "/donjonboss"
+﻿@page "/difficile1"
 @using QueteDuDragon.Data
 @using QueteDuDragon.Data.Heroes
 @using QueteDuDragon.Data.Monstres
@@ -41,7 +41,7 @@ else
 
             <!-- Image du monstre -->
             <div class="monster-container">
-                <img src="images/Monstres/feudragon.png" alt="Dragon de Feu" class="monster-image"/>
+                <img src="images/Monstres/araignees.png" alt="Araignées" class="monster-image"/>
             </div>
         </div>
 
@@ -59,7 +59,7 @@ else
     .dungeon {
         width: 100%;
         height: 80vh;
-        background-image: url('Images/Fondboss.jpg');
+        background-image: url('Images/battlemonstres.jpg');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -166,13 +166,13 @@ else
     private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
-    private string combatMessage =  "Le dragon, maître incontesté des airs, plonge vers vous. preparez-vous.";
+    private string combatMessage = "Tu es attaqué par des araignées, tu dois les éliminer.";
 
     private void UseSkill(string skill)
     {
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
-            combatMessage = $"Votre attaque a trouvé sa marque ! Le dragon rugit de douleur, Poursuivez l'assaut !";
+            combatMessage = $"Vous venez d'attaquer l'araignée monstrueuse, continuez à attaquer.";
             EtatJeu.SelectedHero.pointsVie += 5;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
@@ -182,12 +182,12 @@ else
             {
                 hasWon = true;
                 victory = true;
-                victoryMessage = "Victoire ! Vous avez terrassé le dragon ! Vous avez remporté la quete du dragon";
+                victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner des points de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
             }
             else 
             {
-                combatMessage =  "Le dragon a senti le danger. Il vous crache dessus des flammes brûlantes. Ne reculez pas, attaquez !";
+                combatMessage = "Tu infliges quelques dégâts à l'araignée, mais elle contre-attaque violemment. Tu dois esquiver ses griffes venimeuses !";
                 
             }
         }
@@ -195,7 +195,7 @@ else
         {
             HandleDefeat();
             gameOver = true;
-            defeatMessage = "Le dragon vous a surpassé. Mais chaque échec est une opportunité d'apprendre. Continuez votre exploration pour devenir plus fort.";
+            defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience ou Vous pouvez refaire la partie.";
             
         }
     }
@@ -248,14 +248,14 @@ else
 
     private void HandleDefeat()
     {
-        combatMessage = "Vous avez perdu contre le dragon de feu. Retournez à l'exploration pour gagner plus d'expérience.";
+        combatMessage = "Vous avez perdu contre l'araignée monstrueuse, Vous pouvez refaire la partie.";
         ResetPointsVie(); // Réinitialiser les points de vie après une défaite
     }
 
 
     private void QuitterJeu()
     {
-        Navigation.NavigateTo("/mode-facile");
+        Navigation.NavigateTo("/mode-difficile");
     }
 
     private void Retourner()
@@ -270,7 +270,7 @@ else
             ResetPointsVie();
         }
 
-        Navigation.NavigateTo("/mode-facile");
+        Navigation.NavigateTo("/mode-difficile");
     }
         
     }
