@@ -5,22 +5,20 @@
 
 
 @code{
-
-    private Hero hero = new Warrior();
-    // création instance de notre héros ici guerrier par defaut
-        
     private static readonly string[] AvailableItems =
     {
         "Or", "Epee", "Armes à feu", 
         "flèches", "haches", "arcs", "torches",
         "Cuirasses", "batons",
     };
-
     private void Explore()
     {
-        Random random = new Random();
-        string foundItem = AvailableItems[random.Next(AvailableItems.Length)];
-        hero.AjouterObjet(foundItem);
+        if (EtatJeu.SelectedHero != null)
+        {
+            Random random = new Random();
+            string foundItem = AvailableItems[random.Next(AvailableItems.Length)];
+            EtatJeu.SelectedHero.AjouterObjet(foundItem); // Utilise l’héros sélectionné
+        }
     }
 
 }
@@ -47,9 +45,7 @@ else
 }
 
 }
-<p>Objets collectés : string.Join(", ",Heroes.objetsCollectes)</p>
-<p>Niveau experience : @hero.niveauExperience </p>
-<p>Points de vie  : @hero.pointsVie</p>
+<p>Objets collectés : @string.Join(", ",EtatJeu.SelectedHero.objetsCollectes ?? new List<string> ())</p>
 
 <button @onclick="Explore">Explorer</button>
 }

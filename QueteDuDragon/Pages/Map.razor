@@ -1,5 +1,51 @@
+@using QueteDuDragon.Data.Heroes
+@inject NavigationManager NavigationManager
 
 @code {
+        [Parameter]
+        public Hero? CurrentHero { get; set; }
+
+    private void MoveHero(int deltaRow, int deltaCol)
+    {
+        if (CurrentHero != null)
+        {
+            int newRow = CurrentHero.Row + deltaRow;
+            int newCol = CurrentHero.Col + deltaCol;
+
+            // Empêche de sortir des limites de la carte
+            if (newRow >= 1 && newRow < 14 && newCol >= 1 && newCol < 19)
+            {
+                CurrentHero.Row = newRow;
+                CurrentHero.Col = newCol;
+                CheckHeroLocation(newRow, newCol);
+            }
+        }
+    }
+    private void CheckHeroLocation(int row, int col)
+    {
+        // Redirection en fonction de la position actuelle
+        if (dungeonLocations.Contains((row, col)))
+        {
+            // Déterminez le donjon en fonction des coordonnées
+            if (row == 1 && col == 1)
+                NavigationManager.NavigateTo("donjon1");
+            else if (row == 1 && col == 18)
+                NavigationManager.NavigateTo("donjon2");
+            else if (row == 13 && col == 1)
+                NavigationManager.NavigateTo("donjon3");
+            else if (row == 13 && col == 18)
+                NavigationManager.NavigateTo("donjon4");
+        }
+        else if (row == 5 && col == 9)
+        {
+            // Donjon Boss
+            NavigationManager.NavigateTo("Donjonboss");
+        }
+        else if (row == 7 && col == 9)
+        {
+            NavigationManager.NavigateTo("Magasin");
+        }
+    }
     private List<(int row, int col)> treasureLocations = new List<(int row, int col)>()
     {
         (2, 5),
@@ -26,6 +72,10 @@
     {
         return treasureLocations.Contains((row, col));
     }
+    private bool IsHeroPosition(int row, int col)
+    {
+        return CurrentHero != null && CurrentHero.Row == row && CurrentHero.Col == col;
+    }
 }
 
 <div class="map">
@@ -34,7 +84,11 @@
         @for (int col = 0; col < 20; col++)
         {
             <div class="cellule">
-                @if (IsTreasure(row, col))
+                @if (IsHeroPosition(row, col)) // Si c'est la position du héros
+                {
+                    <img src="Images/Hero.png" alt="Hero" style="width: 100%; height: 100%; object-fit: cover;" />
+                }
+                else if (IsTreasure(row, col))
                 {
                     <img src="Images/Tresor.png" alt="Tresor" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
@@ -84,7 +138,13 @@
         }
     }
 </div>
-
+<div class="controls">
+    <button @onclick="() => MoveHero(0, -1)">←</button>
+    <button @onclick="() => MoveHero(-1, 0)">↑</button>
+    <button @onclick="() => MoveHero(0, 1)">→</button>
+    <button @onclick="() => MoveHero(1, 0)">↓</button>
+    
+</div>
 <style>
     .map {
         display: grid;
