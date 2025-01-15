@@ -4,7 +4,6 @@
 @using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
-
 @if (victory)
 {
     <div class="victory-screen">
@@ -30,7 +29,7 @@ else
         <div class="battle-container">
             <!-- Image du héros -->
             <div class="hero-container">
-                <img src="Images/genie/@EtatJeu.SelectedHero.ImageName"alt="Héros" class="hero-image"/>
+                <img src="Images/genie/@EtatJeu.SelectedHero.ImageName" alt="Héros" class="hero-image"/>
                 <div class="skills-container">
                     @foreach (var skill in EtatJeu.SelectedHero.Skills)
                     {
@@ -53,6 +52,17 @@ else
             <button @onclick="Retourner">Retour à l'exploration</button>
         </div>
     </div>
+    
+    @if (!hasRestarted)
+    {
+        <button @onclick="RestartGame">Recommencer</button>
+    }
+    else
+    {
+        <button disabled style="background-color: red;">Recommencer</button>
+    }
+
+    
 }
 
 <style>
@@ -110,19 +120,31 @@ else
     .action-buttons {
         margin-top: 20px;
     }
-    
-     .defeat-screen, .victory-screen {
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
-         align-items: center;
-         height: 80vh;
-         background-color: rgba(0, 0, 0, 0.8);
-         color: white;
-         text-align: center;
-         padding: 20px;
-         border-radius: 10px;
-     }
+
+    .popup {
+        position: fixed;
+        top: 10%;
+        right: 10%;
+        background-color: green;
+        padding: 10px 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .defeat-screen, .victory-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+    }
 
     .combat-content {
         display: flex;
@@ -137,36 +159,34 @@ else
         margin: 10px;
     }
 
-    .popup {
-        position: fixed;
-        top: 10%;
-        right: 10%;
-        background-color: green;
-        padding: 10px 20px;
-        border: 2px solid black;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
-
     button[style*="background-color: red"] {
         color: green;
         font-weight: bold;
         cursor: not-allowed;
     }
- 
+
+    button[disabled] {
+        background-color: red;
+        color: white;
+        cursor: not-allowed;
+    }
+
 </style>
 <section>
     <div class="popup" style="display: @(showPopup ? "block" : "none");">
         <p>@popupMessage</p>
     </div>
 
-   
+
 </section>
 
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
+    private int defaiteCount = 0;
+    private bool hasRestarted = false;
+    private bool showRestartButton = true;
+    private bool canRestart = true;
     private bool showPopup = false;
     private bool isButtonDisabled = false;
     private bool gameOver = false;
@@ -195,10 +215,10 @@ else
                 victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner despoints de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
             }
-            else 
+            else
             {
                 combatMessage = "Vous venez d'attaquer l'araignée monstrueuse, mais elle s'est défendue, continuez à attaquer.";
-                
+
             }
         }
         else if (skill == "Coup de bouclier" || skill == "Bouclier magique" || skill == "Piège")
@@ -206,7 +226,7 @@ else
             HandleDefeat();
             gameOver = true;
             defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience.";
-            
+
         }
     }
     protected override void OnInitialized()
@@ -226,48 +246,64 @@ else
         }
     }
 
-    
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
-
     private void HandleDefeat()
     {
-        combatMessage = "Vous avez perdu contre l'araignée monstrueuse. Retournez à l'exploration pour gagner plus d'expérience.";
-        ResetPointsVie(); // Réinitialiser les points de vie après une défaite
+        defaiteCount++;
+        ResetPointsVie();
+
+        if (defaiteCount == 1)
+        {
+            combatMessage = "Vous avez perdu contre l'araignée monstrueuse. Vous pouvez recommencer le jeu. ";
+            showPopup = true;
+            popupMessage = "Il vous reste 1 chance";
+            isButtonDisabled = false;
+            canRestart = true;
+        }
+        else if (defaiteCount == 2)
+        {
+            combatMessage = "Vous avez epuisé vos chances.";
+            showPopup = true;
+            popupMessage = "Vous n'avez plus de chances ! Veuillez retourner vers l'exploration";
+            isButtonDisabled = true;
+            canRestart = false;
+
+        }
     }
 
+    private async Task RestartGame()
+    {
+        if (!hasRestarted)
+        {
+            // Réinitialisation après la première défaite
+            hasRestarted = true;
+            showPopup = true;
+            popupMessage = "Redémarrage... Bonne chance!";
+            await Task.Delay(1500); // Pause pour afficher le popup
+            showPopup = false;
+
+            if (EtatJeu.SelectedHero != null)
+            {
+                EtatJeu.SelectedHero.pointsVie = initialPointsVie; // Réinitialisation des points de vie
+            }
+            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        }
+        else 
+        {
+
+            showPopup = true;
+            popupMessage = "Vous n'avez plus de chance!"; // Message pour la deuxième défaite
+            await Task.Delay(1500); // Pause pour le pop-up
+            showPopup = false;
+
+        }
+    }
+
+    
 
     private void QuitterJeu()
     {
         Navigation.NavigateTo("/mode-facile");
     }
-
     private void Retourner()
     {
         if (hasWon)
@@ -282,6 +318,9 @@ else
 
         Navigation.NavigateTo("/mode-facile");
     }
-        
-    }
     
+        
+}
+
+
+}
