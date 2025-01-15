@@ -41,7 +41,7 @@ else
 
             <!-- Image du monstre -->
             <div class="monster-container">
-                <img src="images/Monstres/gobelins.png" alt="Araignées" class="monster-image"/>
+                <img src="images/Monstres/gobelins.png" alt="Gobelins" class="monster-image"/>
             </div>
         </div>
 
@@ -59,7 +59,7 @@ else
     .dungeon {
         width: 100%;
         height: 80vh;
-        background-image: url('Images/Fondcombat.jpg');
+        background-image: url('Images/battlemonstres.jpg');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -176,13 +176,13 @@ else
     private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
-    private string combatMessage = "Vous êtes agressé par un tas d'araignées, il faut les vaincre pour survivre";
+    private string combatMessage = "Vous êtes pris en embuscade par une horde de gobelins. Il faut les éliminer pour sortir de cette situation périlleuse !";
 
     private void UseSkill(string skill)
     {
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
-            combatMessage = $"Vous venez d'attaquer l'araignée monstrueuse, vous avez gagné 5 points de plus, continuez à attaquer.";
+            combatMessage = $"Vous avez blessé le chef gobelin, mais ses sbires ne l'abandonneront pas. Soyez prêt à faire face à de nouvelles attaques !";
             EtatJeu.SelectedHero.pointsVie += 5;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
@@ -192,12 +192,12 @@ else
             {
                 hasWon = true;
                 victory = true;
-                victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner des points de plus.";
+                victoryMessage = "Victoire. Vous avez vaincu le gobelin monstrueux et Gagner des points de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
             }
             else 
             {
-                combatMessage = "Vous venez d'attaquer l'araignée monstrueuse, mais elle s'est défendue, continuez à attaquer.";
+                combatMessage = "Les flèches du chef gobelin vous frôlent. Ne le laissez pas reprendre ses esprits, poursuivez votre assaut !" ;
                 
             }
         }
@@ -205,7 +205,7 @@ else
         {
             HandleDefeat();
             gameOver = true;
-            defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience.";
+            defeatMessage = "Le chef gobelin vous a pris au dépourvu. Vous avez été vaincu. Il faudra revenir plus fort pour le défier.";
             
         }
     }
@@ -258,7 +258,7 @@ else
 
     private void HandleDefeat()
     {
-        combatMessage = "Vous avez perdu contre l'araignée monstrueuse. Retournez à l'exploration pour gagner plus d'expérience.";
+        combatMessage = "Vous avez perdu contre le gobelin. Retournez à l'exploration pour gagner plus d'expérience.";
         ResetPointsVie(); // Réinitialiser les points de vie après une défaite
     }
 
