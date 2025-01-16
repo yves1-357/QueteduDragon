@@ -18,7 +18,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2>Défaite</h2>
         <p>@defeatMessage</p>
-        <button @onclick="RestartGame">Recommencer</button>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -44,10 +43,7 @@ else
                 <img src="images/Monstres/feudragon.png" alt="Dragon De Feu" class="monster-image"/>
             </div>
         </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
-        </div>
+        
 
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
@@ -146,24 +142,15 @@ else
     }
  
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
 
-   
-</section>
 
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
     private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
-    private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
     private string combatMessage = "Les montagnes tremblent sous les pas du dragon. Sa force est terrifiante, Vous devez trouver un moyen de le vaincre.";
@@ -178,7 +165,7 @@ else
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
-            if (clicksToWin >= 2)
+            if (clicksToWin >= 5)
             {
                 hasWon = true;
                 victory = true;
@@ -216,35 +203,6 @@ else
         }
     }
 
-    
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
 
     private void HandleDefeat()
     {

@@ -18,7 +18,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2>Défaite</h2>
         <p>@defeatMessage</p>
-        <button @onclick="RestartGame">Recommencer</button>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -44,10 +43,7 @@ else
                 <img src="images/Monstres/phenix.png" alt="Phénix" class="monster-image"/>
             </div>
         </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
-        </div>
+        
 
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
@@ -146,24 +142,15 @@ else
     }
  
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
 
-   
-</section>
 
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
     private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
-    private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
     private string combatMessage = "Tu es confronté à un phénix enragé. Ses flammes dévorent tout sur leur passage. Tu dois l'éteindre pour survivre.";
@@ -215,37 +202,7 @@ else
             Console.WriteLine($"Points de vie réinitialisés à {initialPointsVie}.");
         }
     }
-
     
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
-
     private void HandleDefeat()
     {
         combatMessage = "Le phénix a eu le dessus cette fois. Mais la défaite n'est qu'un tremplin vers la victoire. Continuez votre aventure pour gagner en expérience, ou bien réessayez immédiatement d'abattre cette créature légendaire.";
