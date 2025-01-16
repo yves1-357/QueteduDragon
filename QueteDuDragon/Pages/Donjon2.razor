@@ -156,13 +156,7 @@ else
     }
  
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
 
-   
-</section>
 
 @code {
     private int chancesRestantes = 1;
@@ -240,7 +234,7 @@ else
             showPopup = false;
             if (EtatJeu.SelectedHero != null)
             {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
+                EtatJeu.SelectedHero.pointsVie = initialPointsVie; // Réinitialisation des points de vie
             }
 
             // Rediriger vers la page actuelle pour relancer le jeu

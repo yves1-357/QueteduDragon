@@ -178,7 +178,7 @@ else
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
-            if (clicksToWin >= 2)
+            if (clicksToWin >= 8)
             {
                 hasWon = true;
                 victory = true;
@@ -249,8 +249,28 @@ else
     private void HandleDefeat()
     {
         combatMessage = "Vous avez perdu contre le dragon de feu. Retournez à l'exploration pour gagner plus d'expérience.";
-        ResetPointsVie(); // Réinitialiser les points de vie après une défaite
+
+        int pointsDeduction = EtatJeu.SelectedHero.Level switch
+        {
+            1 => 15, // Niveau 1 : 15 points en moins
+            2 => 10, // Niveau 2 : 10 points en moins
+            3 => 5,  // Niveau 3 : 5 points en moins
+            _ => 15  // Par défaut, 15 points en moins si le niveau n'est pas défini
+        };
+
+        // Réduire les points de vie
+        EtatJeu.SelectedHero.pointsVie -= pointsDeduction;
+
+        // S'assurer que les points de vie ne tombent pas en dessous de 0
+        if (EtatJeu.SelectedHero.pointsVie < 0)
+        {
+            EtatJeu.SelectedHero.pointsVie = 0;
+        }
+
+        ResetPointsVie(); // Réinitialiser les autres éléments si nécessaire
+        Console.WriteLine($"Défaite : Points de vie réduits de {pointsDeduction}, reste {EtatJeu.SelectedHero.pointsVie} points.");
     }
+
 
 
     private void QuitterJeu()

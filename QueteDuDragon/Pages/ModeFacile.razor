@@ -90,9 +90,9 @@
                             }
                             else if (row == 5 && col == 9)
                             {
-                                <a href="/Donjonboss">
+                                <button @onclick="CheckAccessToDonjonBoss" class="donjon-boss-button">
                                     <img src="Images/DonjonBoss.png" alt="donjonboss" />
-                                </a>
+                                </button>
                             }
                             else
                             {
@@ -104,6 +104,10 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="popup" style="display: @(showPopup ? "block" : "none");">
+    <p>@popupMessage</p>
 </div>
 
 <style>
@@ -132,14 +136,47 @@
         height: auto;
         margin: 10px;
     }
+
+    .donjon-boss-button {
+        all: unset; /* Supprime les styles par défaut du bouton */
+        display: block;
+        width: 80%;
+        height: 80%;
+        text-align: center;
+        cursor: pointer;
+
+    }
+    
+    .donjon-boss-button img {
+        all: unset;
+        width: 80%; /* S'assure que l'image occupe toute la cellule */
+        height: 100%; /* Adapte la hauteur de l'image */
+        object-fit: cover; /* Garde les proportions de l'image */
+    }
+        .popup {
+        position: fixed;
+        top: 10%;
+        right: 10%;
+        background-color: darkred;
+        color: white;
+        padding: 20px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
 </style>
 
 @code {
+    
     private List<(int row, int col)> treasureLocations = new()
     {
         (2, 5), (10, 10), (6, 15), (4, 8), (12, 3), (8, 18)
     };
 
+    private bool showPopup = false;
+    private string popupMessage = "";
+    
     private bool IsTreasure(int row, int col) => treasureLocations.Contains((row, col));
 
     private bool IsMountain(int row, int col) => row == 0 || row == 14 || col == 0 || col == 19;
@@ -154,6 +191,26 @@
         Navigation.NavigateTo("/");
     }
 
+    private async Task CheckAccessToDonjonBoss()
+    {
+        if (EtatJeu.SelectedHero.pointsVie >= 30)
+        {
+            Navigation.NavigateTo("/donjonboss");
+        }
+        else
+        {
+            popupMessage = "Vous n'avez pas assez de points pour affronter le Boss.";
+            showPopup = true;
+
+            // Masquer le pop-up après 2 secondes
+            Task.Delay(2000).ContinueWith(_ =>
+            {
+                showPopup = false;
+                InvokeAsync(StateHasChanged);
+            });
+        }
+    }
+    
     private string GetExperienceLevel()
     {
         int nbObjets = EtatJeu.objetsCollectes.Count;

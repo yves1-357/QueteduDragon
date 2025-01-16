@@ -59,19 +59,17 @@ else
 
     private void Retourner()
     {
-        Navigation.NavigateTo("/mode-facile", true);
-
-        //** changer plus tard
-       // if (EtatJeu.SelectedMode == "/mode-facile")
+      
+       if (EtatJeu.SelectedMode == "Facile")
         {
-          //  Console.WriteLine("Retourner appelé");
-           // Navigation.NavigateTo("/mode-facile", true);
+          
+           Navigation.NavigateTo("/mode-facile", true);
 
 
         }
-       // else if (EtatJeu.SelectedMode == "/mode-difficile")
+       else if (EtatJeu.SelectedMode == "Difficile")
         {
-           // Navigation.NavigateTo("/mode-difficile",true);
+           Navigation.NavigateTo("/mode-difficile",true);
         }
     }
 

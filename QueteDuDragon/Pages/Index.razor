@@ -39,7 +39,7 @@
         <h3>Créer votre personnage </h3>
         <form @onsubmit="HandleFormSubmit">
             <label>Nom du personnage :</label>
-            <input type="text"  @bind="HeroName" placeholder="Entrez votre nom" required />
+            <input type="text"  @bind="HeroName" placeholder="Entrez votre nom" /> //** rajouter required apres
 
             <label>Choix du héros :</label>
             <select @bind="HeroType" required>
