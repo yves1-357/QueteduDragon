@@ -2,7 +2,7 @@
 
 public class Mage : Hero
     {
-        public Mage() : base("Mage")
+        public Mage() : base("Mage","mage.png")
         {
             pointsVie = 5;
             Level = 1;

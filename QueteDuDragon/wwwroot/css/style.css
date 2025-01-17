@@ -96,7 +96,7 @@ footer {
     padding: 10px;
 }
 .background-image {
-    background-image: url('../images/marchand/mag.jpg');
+    background-image: url('../images/marchand/manager.jpg');
     background-size: cover; /* L'image couvre toute la page */
     background-position: center; /* Centrer l'image */
     background-attachment: fixed; /* L'image reste fixe lors du défilement */
@@ -105,11 +105,14 @@ footer {
     width: 100%;
     border: 2px solid #333;
     border-radius: 10px;
-   
     margin-top: 1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Optionnel : pour un effet d'ombre */
     
     }
-
 
 
 

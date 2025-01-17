@@ -2,7 +2,7 @@
 
 public class Thief : Hero
     {
-        public Thief() : base("Voleur")
+        public Thief() : base("Voleur","thief.png")
         {
             
             pointsVie = 5;

@@ -10,72 +10,140 @@
 }
 else
 {
-
-    <h3>Magasin </h3>
-    <p>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</p>
-
-    
-    <p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
-    <p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
+    <h3>Magasin</h3>
+    <p><strong>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</strong></p>
+    <p><strong>Niveau actuel :</strong> @EtatJeu.SelectedHero.Level</p>
+    <p><strong>Objets à acheter :</strong> @(AllowedPurchases - EtatJeu.objetsCollectes.Count)</p>
     
     <div class="background-image">
-        <!-- Contenu ou vide -->
+        <div class="audio-circle">
+            <p>Comment puis-je vous aider ?</p>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </div>
-
-
 
     <div>
         @foreach (var item in MagasinObjets)
         {
-            <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
+            <button 
+                @onclick="() => AcheterObjet(item)" 
+                disabled="@IsItemDisabled(item)">
                 @item
             </button>
         }
     </div>
 
-    <p>Objets collectés : @string.Join(", ", EtatJeu.objetsCollectes)</p>
-  
-    
-    <button @onclick="Retourner">Retour</button>
+    <div>
+        <p><strong>Achat : </strong>@EtatJeu.objetsCollectes.Count objets</p>
+    </div>
 
-@code {
+    <button @onclick="Retourner">Retour</button>
+}
+<style>
+    .audio-circle {
+        position: relative;
+        width: 180px;
+        height: 150px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 50%; /* Fait un cercle */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre pour un effet 3D */
+        transform: translateY(-200px); /* Déplace le cercle vers le haut */
+    }
+
+    .audio-circle p {
+        margin: 0;
+    }
+
+    .dots {
+        position: absolute;
+        bottom: 10px; /* Position des points sous le texte */
+        display: flex;
+        gap: 5px; /* Espacement entre les points */
+    }
+
+    .dots span {
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    .dots span:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    .dots span:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+
+    .dots span:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+
+</style>
+@code 
+{
     private List<string> MagasinObjets = new List<string>
     {
         "Épée à deux mains", "Hache de guerre", "Arc long", "Dague", "Marteau de guerre",
-        "Armure de plaque", "Bouclier enchanté", "Potion de soins", "Potion de force",
+        "Armure de plaque", "Bouclier enchanté",
         "Potion de vitesse", "Pierre de téléportation", "Sceau de protection", "Anneau de résistance",
-        "Amulette de protection", "Potion de soins universelle", "Pierre philosophale (fragment)",
-        "Carte du monde détaillée", "Boussole magique", "Miroir magique", "Kit de survie"
+        "Carte du monde détaillée", "Boussole magique", "Miroir magique"
     };
 
+    // Définir les objets autorisés en fonction du niveau
+    private int AllowedPurchases => EtatJeu.SelectedHero.Level switch
+    {
+        1 => 1,
+        2 => 8,
+        3 => 10,
+        _ => 0
+    };
+
+    // Vérifie si un bouton doit être désactivé
+    private bool IsItemDisabled(string item)
+    {
+        return EtatJeu.objetsCollectes.Contains(item) || EtatJeu.objetsCollectes.Count >= AllowedPurchases;
+    }
+
+    // Ajouter un objet acheté
     private void AcheterObjet(string objet)
     {
-        if (EtatJeu.objetsCollectes.Count < EtatJeu.SelectedHero?.AllowedPurchases)
+        if (!EtatJeu.objetsCollectes.Contains(objet) && EtatJeu.objetsCollectes.Count < AllowedPurchases)
         {
             EtatJeu.objetsCollectes.Add(objet);
-            EtatJeu.SelectedHero.Skills.Add(objet); // Ajouter à ses compétences
+
+            // Ajouter cet objet aux compétences du héros pour usage
+            EtatJeu.SelectedHero.Skills.Add(objet);
+
+            // Afficher un message dans la console (debugging)
+            Console.WriteLine($"Objet acheté : {objet}");
         }
     }
 
+    // Retour à la page précédente
     private void Retourner()
     {
-        Navigation.NavigateTo("/mode-facile", true);
-
-        //** changer plus tard
-       // if (EtatJeu.SelectedMode == "/mode-facile")
+        if (EtatJeu.SelectedMode == "Facile")
         {
-          //  Console.WriteLine("Retourner appelé");
-           // Navigation.NavigateTo("/mode-facile", true);
-
-
+            Navigation.NavigateTo("/mode-facile", forceLoad: true);
         }
-       // else if (EtatJeu.SelectedMode == "/mode-difficile")
+        else if (EtatJeu.SelectedMode == "Difficile")
         {
-           // Navigation.NavigateTo("/mode-difficile",true);
+            Navigation.NavigateTo("/mode-difficile", forceLoad: true);
         }
     }
-
-
-
-}
 }

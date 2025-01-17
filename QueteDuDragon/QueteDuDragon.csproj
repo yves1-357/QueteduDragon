@@ -13,7 +13,9 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\images\background\" />
+      <Folder Include="wwwroot\images\genie\" />
       <Folder Include="wwwroot\images\marchand\" />
+      <Folder Include="wwwroot\images\Monstres\" />
     </ItemGroup>
 
 </Project>

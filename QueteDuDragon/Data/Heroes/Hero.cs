@@ -6,17 +6,23 @@
         public int pointsVie { get; set; } = 5;
         public int Level { get; set; } = 1; // Par défaut, le héros commence au niveau 1
         public List<string> Skills { get; set; } = new List<string>();
+        public string ImageName { get; set; }
 
         public List<string> Tools { get; set; } = new List<string>(); // outils achete au magasin 
         public List<string> objetsCollectes { get; set; } = new List<string>();
         public int niveauExperience { get; set; } = 1;
+
+        
+        public int Row { get; set; } = 6; 
+        public int Col { get; set; } = 9;
         public int Row { get; set; } = 6; 
         public int Col { get; set; } = 9; 
 
-        public Hero(string name)
+        public Hero(string name, string imageName)
         {
             Name = name;
-            
+            ImageName = imageName;
+
         }
 
         public void AjouterObjet(string objets)
@@ -57,9 +63,9 @@
 
         public int AllowedPurchases => Level switch
         {
-            1 => 3,
-            2 => 4,
-            3 => 7,
+            1 => 1,
+            2 => 2,
+            3 => 3,
             _ => 0
         };
         

@@ -2,7 +2,7 @@
 
 public class Warrior : Hero
     {
-        public Warrior(): base("Guerrier")
+        public Warrior(): base("Guerrier","guerrier.png")
         {
             pointsVie = 5;
             Level = 1;

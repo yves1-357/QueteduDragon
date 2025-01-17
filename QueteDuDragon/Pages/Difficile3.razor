@@ -1,4 +1,4 @@
-@page "/donjon2"
+﻿@page "/difficile3"
 @using QueteDuDragon.Data
 @using QueteDuDragon.Data.Heroes
 @using QueteDuDragon.Data.Monstres
@@ -18,7 +18,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2>Défaite</h2>
         <p>@defeatMessage</p>
-        <button @onclick="RestartGame">Recommencer</button>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -44,10 +43,7 @@ else
                 <img src="images/Monstres/gobelins.png" alt="Gobelins" class="monster-image"/>
             </div>
         </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
-        </div>
+        
 
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
@@ -137,17 +133,7 @@ else
         margin: 10px;
     }
 
-    .popup {
-        position: fixed;
-        top: 10%;
-        right: 10%;
-        background-color: green;
-        padding: 10px 20px;
-        border: 2px solid black;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
+    
 
     button[style*="background-color: red"] {
         color: green;
@@ -157,26 +143,22 @@ else
  
 </style>
 
-
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
     private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
-    private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
-    private string combatMessage = "Vous êtes pris en embuscade par une horde de gobelins. Il faut les éliminer pour sortir de cette situation périlleuse !";
+    private string combatMessage = "Les gobelins vous encerclent. Chaque seconde compte ! Combattez-les pour survivre !";
 
     private void UseSkill(string skill)
     {
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
-            combatMessage = $"Vous avez blessé le chef gobelin, mais ses sbires ne l'abandonneront pas. Soyez prêt à faire face à de nouvelles attaques !";
+            combatMessage = $"Vous avez assené un coup dur au chef gobelin ! Continuez à l'attaquer, il est affaibli mais pas vaincu !";
             EtatJeu.SelectedHero.pointsVie += 5;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
@@ -186,12 +168,12 @@ else
             {
                 hasWon = true;
                 victory = true;
-                victoryMessage = "Victoire. Vous avez vaincu le gobelin monstrueux et Gagner des points de plus.";
+                victoryMessage = "Victoire. Vous avez vaincu le gobelin et Gagner des points de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
             }
             else 
             {
-                combatMessage = "Les flèches du chef gobelin vous frôlent. Ne le laissez pas reprendre ses esprits, poursuivez votre assaut !" ;
+                combatMessage = "Tu infliges une bonne blessure au gobelin, mais il riposte avec rage ! Esquive sa hache qui s'abat sur toi !";
                 
             }
         }
@@ -199,7 +181,7 @@ else
         {
             HandleDefeat();
             gameOver = true;
-            defeatMessage = "Le chef gobelin vous a pris au dépourvu. Vous avez été vaincu. Il faudra revenir plus fort pour le défier.";
+            defeatMessage =  "Les flèches du gobelin vous ont atteint. La défaite est amère, mais ce n'est qu'une étape. Continuez votre aventure.";
             
         }
     }
@@ -221,45 +203,16 @@ else
     }
 
     
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = initialPointsVie; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
-
     private void HandleDefeat()
     {
-        combatMessage = "Vous avez perdu contre le gobelin. Retournez à l'exploration pour gagner plus d'expérience.";
+        combatMessage = "Vous avez perdu contre le gobelin, Vous pouvez refaire la partie.";
         ResetPointsVie(); // Réinitialiser les points de vie après une défaite
     }
 
 
     private void QuitterJeu()
     {
-        Navigation.NavigateTo("/mode-facile");
+        Navigation.NavigateTo("/mode-difficile");
     }
 
     private void Retourner()
@@ -274,7 +227,7 @@ else
             ResetPointsVie();
         }
 
-        Navigation.NavigateTo("/mode-facile");
+        Navigation.NavigateTo("/mode-difficile");
     }
         
     }
