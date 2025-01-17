@@ -2,7 +2,6 @@
 @using QueteDuDragon.Data
 @inject EtatJeu EtatJeu
 @inject NavigationManager Navigation
-@using System.Collections.Generic
 
 @if (EtatJeu == null || EtatJeu.SelectedHero == null)
 {
@@ -11,30 +10,89 @@
 }
 else
 {
-    <h3>Magasin </h3>
+    <h3>Magasin</h3>
     <p><strong>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</strong></p>
     <p><strong>Niveau actuel :</strong> @EtatJeu.SelectedHero.Level</p>
-    <p><strong>Objets que vous pouvez acheter :</strong> @AllowedPurchases</p>
-
+    <p><strong>Objets à acheter :</strong> @(AllowedPurchases - EtatJeu.objetsCollectes.Count)</p>
+    
     <div class="background-image">
-        <!-- Contenu ou vide -->
+        <div class="audio-circle">
+            <p>Comment puis-je vous aider ?</p>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </div>
+
     <div>
         @foreach (var item in MagasinObjets)
         {
-            <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
+            <button 
+                @onclick="() => AcheterObjet(item)" 
+                disabled="@IsItemDisabled(item)">
                 @item
             </button>
         }
     </div>
 
     <div>
-        <p><strong>Achat :</strong> @EtatJeu.objetsCollectes.Count</p>
+        <p><strong>Achat : </strong>@EtatJeu.objetsCollectes.Count objets</p>
     </div>
 
     <button @onclick="Retourner">Retour</button>
 }
+<style>
+    .audio-circle {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 50%; /* Fait un cercle */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre pour un effet 3D */
+    }
 
+    .audio-circle p {
+        margin: 0;
+    }
+
+    .dots {
+        position: absolute;
+        bottom: 10px; /* Position des points sous le texte */
+        display: flex;
+        gap: 5px; /* Espacement entre les points */
+    }
+
+    .dots span {
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    .dots span:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    .dots span:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+
+    .dots span:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+
+</style>
 @code 
 {
     private List<string> MagasinObjets = new List<string>
@@ -49,22 +107,33 @@ else
     private int AllowedPurchases => EtatJeu.SelectedHero.Level switch
     {
         1 => 1,
-        2 => 2,
-        3 => 3,
+        2 => 8,
+        3 => 10,
         _ => 0
     };
 
+    // Vérifie si un bouton doit être désactivé
+    private bool IsItemDisabled(string item)
+    {
+        return EtatJeu.objetsCollectes.Contains(item) || EtatJeu.objetsCollectes.Count >= AllowedPurchases;
+    }
+
+    // Ajouter un objet acheté
     private void AcheterObjet(string objet)
     {
-        if (EtatJeu.objetsCollectes.Count < AllowedPurchases && !EtatJeu.objetsCollectes.Contains(objet))
+        if (!EtatJeu.objetsCollectes.Contains(objet) && EtatJeu.objetsCollectes.Count < AllowedPurchases)
         {
             EtatJeu.objetsCollectes.Add(objet);
 
-            // Ajouter l'objet dans les compétences du héros pour une utilisation future
+            // Ajouter cet objet aux compétences du héros pour usage
             EtatJeu.SelectedHero.Skills.Add(objet);
+
+            // Afficher un message dans la console (debugging)
+            Console.WriteLine($"Objet acheté : {objet}");
         }
     }
 
+    // Retour à la page précédente
     private void Retourner()
     {
         if (EtatJeu.SelectedMode == "Facile")
