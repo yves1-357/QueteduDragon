@@ -6,8 +6,8 @@ Le jeu propose plusieurs fonctionnalités :
 - Une sélection de classes de héros pour commencer l’aventure, comme Guerrier, Mage ou Voleur.  
 - Une carte immersive comprenant différents biomes tels que les plaines, les montagnes, les forêts et les donjons.  
 - Des combats stratégiques au tour par tour contre une variété d’ennemis.  
-- Des quêtes secondaires permettant de remporter des récompenses uniques et de gagner de l’expérience.  
-- Un système de progression pour débloquer de nouvelles compétences et améliorer l’équipement du personnage.  
+- Des quêtes permettant de remporter des récompenses uniques et de gagner de l’expérience.  
+- Un système de progression ( 3 niveaux ) pour débloquer de nouvelles compétences et améliorer l’équipement du personnage.  
 
 L’objectif ultime est de retrouver et vaincre le Dragon légendaire, tout en dévoilant les secrets de ce monde fantastique.  
 
