@@ -2,16 +2,20 @@
 @using QueteDuDragon.Data
 @using QueteDuDragon.Data.Heroes
 @inject NavigationManager NavigationManager
+@inject EtatJeu EtatJeu
+
 @code {
-        [Parameter]
-        public Hero? CurrentHero { get; set; }
+    [Parameter] public Hero? CurrentHero { get; set; }
+
+    private static readonly string[] AvailableItems = { "Or", "Epee", "Armes à feu", "flèches", "haches", "arcs" };
+    private Dictionary<(int row, int col), string> treasureMap = new();
 
     private void MoveHero(int deltaRow, int deltaCol)
     {
         if (CurrentHero != null)
         {
-            int newRow = CurrentHero.Row + deltaRow;
-            int newCol = CurrentHero.Col + deltaCol;
+            var newRow = CurrentHero.Row + deltaRow;
+            var newCol = CurrentHero.Col + deltaCol;
 
             // Empêche de sortir des limites de la carte
             if (newRow >= 1 && newRow < 14 && newCol >= 1 && newCol < 19)
@@ -22,12 +26,15 @@
             }
         }
     }
+
     private bool showTreasurePopup = false;
+    private string foundItem = string.Empty; // Stocke l'objet trouvé
 
     private void ClosePopup()
     {
         showTreasurePopup = false;
     }
+
     private void CheckHeroLocation(int row, int col)
     {
         // Redirection en fonction de la position actuelle
@@ -53,13 +60,18 @@
         {
             NavigationManager.NavigateTo("Magasin");
         }
-        // Trésor
-        else if (IsTreasure(row, col))
+        //tresors
+        else if (IsTreasure(row, col) && treasureMap.TryGetValue((row, col), out var item))
         {
-            showTreasurePopup = true; // Affiche la fenêtre
+            showTreasurePopup = true;
+            foundItem = item; // Attribue l'objet correspondant
+            EtatJeu.AjouterObjetCollecte(item);
+            treasureMap.Remove((row, col)); // Retire le trésor de la carte (non réutilisable)
+            treasureLocations.Remove((row, col));
         }
     }
-    private List<(int row, int col)> treasureLocations = new List<(int row, int col)>()
+
+    private List<(int row, int col)> treasureLocations = new()
     {
         (2, 5),
         (10, 10),
@@ -68,7 +80,8 @@
         (12, 3),
         (8, 18)
     };
-    private List<(int row, int col)> dungeonLocations = new List<(int row, int col)>()
+
+    private List<(int row, int col)> dungeonLocations = new()
     {
         (1, 1),
         (1, 18),
@@ -85,21 +98,40 @@
     {
         return treasureLocations.Contains((row, col));
     }
+
     private bool IsHeroPosition(int row, int col)
     {
         return CurrentHero != null && CurrentHero.Row == row && CurrentHero.Col == col;
     }
+
+    protected override void OnInitialized()
+    {
+        // Associe aléatoirement les objets aux trésors sans répétition
+        var random = new Random();
+        List<string> availableItemsCopy = AvailableItems.ToList(); // Copie des objets disponibles
+        foreach (var location in treasureLocations)
+        {
+            if (availableItemsCopy.Count > 0)
+            {
+                // Tire un objet aléatoire
+                var index = random.Next(availableItemsCopy.Count);
+                treasureMap[location] = availableItemsCopy[index];
+                availableItemsCopy.RemoveAt(index); // Supprime l'objet pour éviter les répétitions
+            }
+        }
+    }
+
 }
 
 <div class="map">
-    @for (int row = 0; row < 15; row++)
+    @for (var row = 0; row < 15; row++)
     {
-        @for (int col = 0; col < 20; col++)
+        @for (var col = 0; col < 20; col++)
         {
             <div class="cellule">
-                @if (IsHeroPosition(row, col)) 
+                @if (IsHeroPosition(row, col))
                 {
-                    <img src="Images/Hero.png" alt="Hero" style="width: 100%; height: 100%; object-fit: cover;" />
+                    <img src="Images/Hero.png" alt="Hero" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
                 else if (IsTreasure(row, col))
                 {
@@ -108,30 +140,35 @@
                 else if (row == 1 && col == 1)
                 {
                     <a href="donjon1">
-                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        <img src="Images/Donjon.png" alt="Donjon"
+                             style="width: 100%; height: 100%; object-fit: cover;"/>
                     </a>
                 }
                 else if (row == 1 && col == 18)
                 {
                     <a href="donjon2">
-                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        <img src="Images/Donjon.png" alt="Donjon"
+                             style="width: 100%; height: 100%; object-fit: cover;"/>
                     </a>
                 }
                 else if (row == 13 && col == 1)
                 {
                     <a href="donjon3">
-                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        <img src="Images/Donjon.png" alt="Donjon"
+                             style="width: 100%; height: 100%; object-fit: cover;"/>
                     </a>
                 }
                 else if (row == 13 && col == 18)
                 {
                     <a href="donjon4">
-                        <img src="Images/Donjon.png" alt="Donjon" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        <img src="Images/Donjon.png" alt="Donjon"
+                             style="width: 100%; height: 100%; object-fit: cover;"/>
                     </a>
                 }
                 else if (row == 0 || row == 14 || col == 0 || col == 19)
                 {
-                    <img src="Images/Montagne.png" alt="Montagne" style="width: 100%; height: 100%; object-fit: cover;"/>
+                    <img src="Images/Montagne.png" alt="Montagne"
+                         style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
                 else if (row == 7 && col == 9)
                 {
@@ -140,7 +177,8 @@
                 else if (row == 5 && col == 9)
                 {
                     <a href="/Donjonboss">
-                        <img src="Images/DonjonBoss.png" alt="donjonboss" style="width: 100%; height: 100%; object-fit: cover;"/>
+                        <img src="Images/DonjonBoss.png" alt="donjonboss"
+                             style="width: 100%; height: 100%; object-fit: cover;"/>
                     </a>
                 }
                 else
@@ -156,39 +194,40 @@
     <button @onclick="() => MoveHero(-1, 0)">↑</button>
     <button @onclick="() => MoveHero(0, 1)">→</button>
     <button @onclick="() => MoveHero(1, 0)">↓</button>
-    
+
 </div>
 @if (showTreasurePopup)
 {
     <div class="popup-on-map">
         <div class="popup-content">
-            <p>🎉 Félicitations, vous avez trouvé un trésor !</p>
+            <p>🎉 Félicitations, vous avez trouvé un trésor :
+                <strong>@foundItem</strong> !</p>
             <button @onclick="ClosePopup">OK</button>
         </div>
     </div>
 }
 
 <style>
-    
+
     .popup-on-map {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.5); 
+        background-color: rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000; 
+        z-index: 1000;
     }
 
     .popup-content {
         background-color: #050505;
-        border: 3px solid black; 
+        border: 3px solid black;
         padding: 20px;
-        border-radius: 10px; 
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         text-align: center;
     }
 
@@ -207,7 +246,7 @@
         cursor: pointer;
         transition: background-color 0.3s;
     }
-    
+
     .map {
         display: grid;
         grid-template-rows: repeat(15, 1fr);

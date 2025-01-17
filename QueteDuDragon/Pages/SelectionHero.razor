@@ -1,8 +1,8 @@
 ﻿@inject EtatJeu EtatJeu
 @inject NavigationManager NavigationManager
-@using QueteDuDragon.Data.Heroes;
-@using QueteDuDragon.Data;
 @page "/Selection-hero"
+@using QueteDuDragon.Data
+@using QueteDuDragon.Data.Heroes
 
 <h3>Choissisez votre héros et le mode de jeu :</h3>
 
@@ -18,7 +18,7 @@
     </select>
 
     <label for="mode">Mode :</label>
-    <select id="mode" @bind="GameMode" >
+    <select id="mode" @bind="GameMode">
         <option value="Facile">Facile</option>
         <option value="Difficile">Difficile</option>
     </select>
@@ -37,40 +37,36 @@
     private string HeroType { get; set; } = "Warrior"; // Valeur par défaut
     private string GameMode { get; set; } = "Facile"; // Valeur par défaut
     private string? ErrorMessage { get; set; }
-    
-    public Hero SelectedHero { get; set; }
-    
 
-    
+    public Hero SelectedHero { get; set; }
+
+
     private void HandleFormSubmit()
     {
-        
         Hero selectedHero = HeroType switch
         {
             "Warrior" => new Warrior { Name = HeroName, Row = 7, Col = 9 },
-            "Mage" => new Mage { Name = HeroName, Row = 7 , Col = 9},
-            "Thief" => new Thief { Name = HeroName, Row = 7 , Col = 9},
+            "Mage" => new Mage { Name = HeroName, Row = 7, Col = 9 },
+            "Thief" => new Thief { Name = HeroName, Row = 7, Col = 9 },
             _ => throw new InvalidOperationException("Type de héros invalide.")
         };
-        
-       // selectedHero.InitializeSkills();
-        
+
+        // selectedHero.InitializeSkills();
+
         //mettre a jour l'etat du jeu
         EtatJeu.SelectedHero = selectedHero;
         EtatJeu.SelectedMode = GameMode;
-        
+
         Console.WriteLine($"Héros sélectionné : {selectedHero.Name} ({HeroType})");
         Console.WriteLine($"Mode sélectionné : {GameMode}");
         Console.WriteLine($"EtatJeu.SelectedHero : {EtatJeu.SelectedHero.Name}");
-      
+
         // Forcer la mise à jour
         StateHasChanged();
         // Redirection
         NavigationManager.NavigateTo(GameMode == "Facile" ? "/mode-facile" : "/mode-difficile");
         // Rediriger selon le mode sélectionné
-        
     }
- 
-    
+
 
 }

@@ -3,43 +3,48 @@
 @inject EtatJeu EtatJeu
 @inject NavigationManager Navigation
 
-@if (EtatJeu == null || EtatJeu.SelectedHero == null)
+@if (EtatJeu.SelectedHero == null)
 {
-    <p>Erreur : Le héros ou l'état du jeu n'a pas été initialisé. Veuillez retourner en arrière et réessayer.</p>
+    <p>Erreur : Le héros ou l'état du jeu n'a pas été initialisé. Veuillez revenir en arrière et réessayer.</p>
     <button @onclick="Retourner">Retour</button>
 }
 else
 {
-
-    <h3>Magasin </h3>
+    <h3>Magasin</h3>
     <p>Bienvenue, @EtatJeu.SelectedHero.Name ! Vous pouvez acheter des objets en fonction de votre niveau.</p>
-
-    
     <p>Niveau actuel : @EtatJeu.SelectedHero.Level</p>
     <p>Objets que vous pouvez acheter : @EtatJeu.SelectedHero.AllowedPurchases</p>
-    
-    <div class="background-image">
-        <!-- Contenu ou vide -->
-    </div>
-
-
 
     <div>
         @foreach (var item in MagasinObjets)
         {
-            <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.objetsCollectes.Contains(item)">
+            <button @onclick="() => AcheterObjet(item)" disabled="@EtatJeu.ObjetsCollectes.Contains(item)">
                 @item
             </button>
         }
     </div>
 
-    <p>Objets collectés : @string.Join(", ", EtatJeu.objetsCollectes)</p>
-  
-    
+    <p><strong>Objets collectés par ce héros :</strong></p>
+    @if (EtatJeu.ObjetsCollectes.Any())
+    {
+        <ul>
+            @foreach (var item in EtatJeu.ObjetsCollectes)
+            {
+                <li>@item</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Aucun objet collecté pour ce héros.</p>
+    }
+
     <button @onclick="Retourner">Retour</button>
+}
 
 @code {
-    private List<string> MagasinObjets = new List<string>
+
+    private readonly List<string> MagasinObjets = new()
     {
         "Épée à deux mains", "Hache de guerre", "Arc long", "Dague", "Marteau de guerre",
         "Armure de plaque", "Bouclier enchanté", "Potion de soins", "Potion de force",
@@ -50,32 +55,15 @@ else
 
     private void AcheterObjet(string objet)
     {
-        if (EtatJeu.objetsCollectes.Count < EtatJeu.SelectedHero?.AllowedPurchases)
+        if (EtatJeu.ObjetsCollectes.Count < EtatJeu.SelectedHero?.AllowedPurchases)
         {
-            EtatJeu.objetsCollectes.Add(objet);
-            EtatJeu.SelectedHero.Skills.Add(objet); // Ajouter à ses compétences
+            EtatJeu.AjouterObjetCollecte(objet);
         }
     }
 
     private void Retourner()
     {
-        Navigation.NavigateTo("/mode-facile", true);
-
-        //** changer plus tard
-       // if (EtatJeu.SelectedMode == "/mode-facile")
-        {
-          //  Console.WriteLine("Retourner appelé");
-           // Navigation.NavigateTo("/mode-facile", true);
-
-
-        }
-       // else if (EtatJeu.SelectedMode == "/mode-difficile")
-        {
-           // Navigation.NavigateTo("/mode-difficile",true);
-        }
+        Navigation.NavigateTo(EtatJeu.SelectedMode == "Facile" ? "/mode-facile" : "/mode-difficile");
     }
 
-
-
-}
 }

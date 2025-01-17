@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes;
+@using QueteDuDragon.Data.Heroes
 @inject NavigationManager NavigationManager
 @inject EtatJeu EtatJeu
 
@@ -16,21 +16,21 @@
                 Bienvenue dans la Quête du Dragon ! Choisissez un héros parmi Guerrier, Mage ou Voleur,
                 puis partez à l'aventure. Collectez des objets, améliorez vos compétences et affrontez
                 des ennemis redoutables.
-                
+
                 <br>
                 Deux modes disponibles:
                 <br/>
-                
+
                 <br>
                 Facile: Collectez des objets jusqu'au 2eme Niveau puis Affronter le BossFinal.
                 <br/>
 
                 <br>
-                Difficile :  Plus de défis avant d'affronter le BossFinal.
+                Difficile : Plus de défis avant d'affronter le BossFinal.
                 <br/>
 
                 <br>Décidez de jouer en mode facile ou difficile. Bonne chance !<br/>
-                
+
             </p>
         </section>
     </div>
@@ -39,7 +39,7 @@
         <h3>Créer votre personnage </h3>
         <form @onsubmit="HandleFormSubmit">
             <label>Nom du personnage :</label>
-            <input type="text"  @bind="HeroName" placeholder="Entrez votre nom" required />
+            <input type="text" @bind="HeroName" placeholder="Entrez votre nom" required/>
 
             <label>Choix du héros :</label>
             <select @bind="HeroType" required>
@@ -85,12 +85,12 @@
                 "Thief" => new Thief { Name = HeroName },
                 _ => throw new InvalidOperationException("Type de héros invalide.")
             };
-            
+
             if (selectedHero.Skills.Count == 0) // Évite l'ajout en double
             {
                 selectedHero.InitializeSkills();
             }
-            
+
             EtatJeu.SelectedHero = selectedHero;
             EtatJeu.SelectedMode = GameMode;
             // Rediriger vers la page selon le mode
@@ -103,5 +103,6 @@
             ;
         }
     }
+
 }
 

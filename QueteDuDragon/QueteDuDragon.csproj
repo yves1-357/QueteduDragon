@@ -12,8 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\images\background\" />
-      <Folder Include="wwwroot\images\marchand\" />
+        <Folder Include="wwwroot\images\background\"/>
+        <Folder Include="wwwroot\images\marchand\"/>
     </ItemGroup>
 
 </Project>

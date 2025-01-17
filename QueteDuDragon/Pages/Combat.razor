@@ -1,44 +1,43 @@
-﻿@using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@inject EtatJeu EtatJeu
+﻿@inject EtatJeu EtatJeu
 @inject NavigationManager Navigation
 @page "/combat"
+@using QueteDuDragon.Data
 
 <h3>Combat contre @EtatJeu.BossFinal?.Name </h3>
 
 @if (EtatJeu.SelectedHero == null || EtatJeu.BossFinal == null)
 {
     <p>Erreur : Impossible de commencer le combat. Vérifiez que tout est correctement initialisé.</p>
-    
 }
 else if (!EtatJeu.IsCombatActive)
 {
-    <p>Le combat est terminé:! @((EtatJeu.BossFinal?.pointsVie ?? 0) <= 0 ? "Vous avez vaincu le bossFinal!":"Vous avez été vaincus par le bossFinal.")</p>
+    <p>Le combat est
+        terminé:! @((EtatJeu.BossFinal?.pointsVie ?? 0) <= 0 ? "Vous avez vaincu le bossFinal!" : "Vous avez été vaincus par le bossFinal.")</p>
     <button @onclick="RetournerAuchoixBoss">Retour au choix boss/magasin</button>
 }
 else
 {
     <p>Héros : @EtatJeu.SelectedHero.Name</p>
-    <p>Points de vie  du Heros: @EtatJeu.SelectedHero.pointsVie</p>
+    <p>Points de vie du Heros: @EtatJeu.SelectedHero.pointsVie</p>
     <p>BossFinal :@EtatJeu.BossFinal.Name</p>
     <p>Points de vie du BossFinal : @EtatJeu.BossFinal.pointsVie</p>
-    
+
     <h4>Vos compétences:</h4>
     <div>
-        @foreach (var skill in EtatJeu.SelectedHero.Skills  ?? Enumerable.Empty<string>())
+        @foreach (var skill in EtatJeu.SelectedHero.Skills ?? Enumerable.Empty<string>())
         {
             <button @onclick="() => UseSkill(skill)">@skill</button>
         }
     </div>
-    
+
     <h4>Vos outils:</h4>
     <div>
-        @foreach (var tool in EtatJeu.SelectedHero.Tools  ?? Enumerable.Empty<string>())
+        @foreach (var tool in EtatJeu.SelectedHero.Tools ?? Enumerable.Empty<string>())
         {
             <button @onclick="() => UseTool(tool)">@tool</button>
         }
     </div>
-    
+
     <p>@combatLog</p>
 }
 
@@ -52,6 +51,7 @@ else
             combatLog = "Erreur : Héros ou Boss non initialisés.";
             return;
         }
+
         if (EtatJeu.BossFinal.TryEvade())
         {
             combatLog = $"Le bossFinal esquive l'attaque {skill}";
@@ -59,17 +59,18 @@ else
             return;
         }
 
-        int damage = EtatJeu.SelectedHero.UseSkill(skill);
+        var damage = EtatJeu.SelectedHero.UseSkill(skill);
         EtatJeu.BossFinal.TakeDamage(damage);
         combatLog = $"{EtatJeu.SelectedHero.Name} utilise {skill} et inflige {damage} point de degats au bossFinal.";
 
-        
+
         if (EtatJeu.BossFinal.pointsVie <= 0)
         {
             combatLog += "\nVictoire ! Vous avez vaincu le BossFinal.";
             EtatJeu.IsCombatActive = false;
             return;
         }
+
         BossAttack(); // Contre-attaque du BossFinal
     }
 
@@ -80,7 +81,8 @@ else
             combatLog = "Erreur : Héros ou Boss non initialisés.";
             return;
         }
-        int damage = EtatJeu.SelectedHero.UseTool(tool);
+
+        var damage = EtatJeu.SelectedHero.UseTool(tool);
         EtatJeu.BossFinal.TakeDamage(damage);
         combatLog = $"{EtatJeu.SelectedHero.Name} utilise {tool} et inflige {damage} point de degats au bossFinal.";
 
@@ -90,6 +92,7 @@ else
             EtatJeu.IsCombatActive = false;
             return;
         }
+
         BossAttack();
     }
 
@@ -100,10 +103,11 @@ else
             combatLog = "Erreur : Héros ou Boss non initialisés.";
             return;
         }
+
         EtatJeu.IncrementCombatTurns();
 
-        Random random = new Random();
-        int damage = random.Next(15, 31); // bossFinal tres fort dans mode (facile)
+        var random = new Random();
+        var damage = random.Next(15, 31); // bossFinal tres fort dans mode (facile)
         EtatJeu.SelectedHero.TakeDamage(damage);
         combatLog += $"\n Le BossFinal contre-attaque et inflige {damage} points de degats au héros.";
 
@@ -117,13 +121,12 @@ else
             combatLog += "\nVictoire ! Vous avez vaincu le BossFinal.";
             EtatJeu.IsCombatActive = false;
         }
-
     }
 
     private void RetournerAuchoixBoss()
     {
         EtatJeu.IsCombatActive = false;
-        Navigation.NavigateTo("/choix-boss"); 
+        Navigation.NavigateTo("/choix-boss");
     }
 
 }

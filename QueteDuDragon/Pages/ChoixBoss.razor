@@ -1,7 +1,7 @@
-﻿@using QueteDuDragon.Data
-@inject NavigationManager Navigation
+﻿@inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 @page "/choix-boss"
+@using QueteDuDragon.Data
 
 <h3>Vous avez collecté 4 objets !</h3>
 <p>Souhaitez-vous aller au magasin pour acheter des outils , affronter directement le bossFinal</p>
@@ -20,16 +20,15 @@
     {
         try
         {
-
             EtatJeu.StartCombat();
             Navigation.NavigateTo("/combat");
         }
-    
-    catch (Exception )
-    {
-        Console.WriteLine(@"Erreur pendant le demarrage du combat: {ex.
+
+        catch (Exception)
+        {
+            Console.WriteLine(@"Erreur pendant le demarrage du combat: {ex.
         Message}");
+        }
     }
 
-}
 }

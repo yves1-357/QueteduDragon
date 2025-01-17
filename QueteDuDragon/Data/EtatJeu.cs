@@ -1,68 +1,83 @@
-﻿namespace QueteDuDragon.Data;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using QueteDuDragon.Data.Heroes;
 using QueteDuDragon.Data.bossFinal;
+using QueteDuDragon.Data.Heroes;
 
+namespace QueteDuDragon.Data;
 
 public class EtatJeu : INotifyPropertyChanged
 {
+    public const int MaxTurns = 10;
+
+    private string _selectedMode = "";
+
+    private Dragon bossFinal = new();
+
+    private int combatTurns;
+
+    private bool isCombatActive;
     private Hero? selectedHero;
+
+    public EtatJeu()
+    {
+        // Par défaut, crée un Guerrier initial
+        SelectedHero = new Warrior { Name = "Guerrier" };
+    }
+
     public Hero? SelectedHero
     {
         get => selectedHero;
         set
         {
-            selectedHero = value;
-            OnPropertyChanged();
+            if (selectedHero != value)
+            {
+                selectedHero = value;
+
+                // Notifie que le héros a changé
+                OnPropertyChanged();
+
+                // Notifie que la liste "ObjetsCollectes" a changé avec le nouveau héros
+                OnPropertyChanged(nameof(ObjetsCollectes));
+            }
         }
     }
 
-    private Dragon bossFinal = new Dragon();
     public Dragon BossFinal
     {
         get => bossFinal;
         set
         {
             bossFinal = value;
-            OnPropertyChanged(nameof(BossFinal));
+            OnPropertyChanged();
         }
     }
 
-    public List<string> objetsCollectes = new List<string>(); // Liste modifiable privée
-    public List<string> ObjetsCollectes // Propriété publique exposant la liste
-    {
-        get => objetsCollectes;
-        set
-        {
-            objetsCollectes = value;
-            OnPropertyChanged(nameof(ObjetsCollectes));
-        }
-    }
+    // Collection des objets collectés basée sur le héros sélectionné
+    public ObservableCollection<string> ObjetsCollectes =>
+        // Renvoie les objets collectés par le héros actif, sinon une liste vide
+        SelectedHero?.objetsCollectes ?? new ObservableCollection<string>();
 
-    private bool isCombatActive;
     public bool IsCombatActive
     {
         get => isCombatActive;
         set
         {
             isCombatActive = value;
-            OnPropertyChanged(nameof(IsCombatActive));
+            OnPropertyChanged();
         }
     }
 
-    private int combatTurns;
     public int CombatTurns
     {
         get => combatTurns;
         set
         {
             combatTurns = value;
-            OnPropertyChanged(nameof(CombatTurns));
+            OnPropertyChanged();
         }
     }
 
-    private string _selectedMode = "";
     public string SelectedMode
     {
         get => _selectedMode;
@@ -72,22 +87,13 @@ public class EtatJeu : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    public const int MaxTurns = 10;
-
-    public EtatJeu()
-    {
-        SelectedHero = new Warrior { Name = "Guerrier" }; //////**********
-    }
-
-    
 
     public void SelectHero(Hero hero)
     {
@@ -96,10 +102,7 @@ public class EtatJeu : INotifyPropertyChanged
 
     public void StartCombat()
     {
-        if (SelectedHero == null)
-        {
-            throw new InvalidOperationException("Aucun héros sélectionné.");
-        }
+        if (SelectedHero == null) throw new InvalidOperationException("Aucun héros sélectionné.");
 
         IsCombatActive = true;
         BossFinal = new Dragon();
@@ -112,8 +115,16 @@ public class EtatJeu : INotifyPropertyChanged
 
     public void AjouterObjetCollecte(string collecte)
     {
-        objetsCollectes.Add(collecte); // La liste privée est modifiable
-        OnPropertyChanged(nameof(ObjetsCollectes)); // Mise à jour de l'interface utilisateur
+        if (SelectedHero != null)
+        {
+            SelectedHero.AjouterObjet(collecte); // Ajoute l'objet directement à la collection
+            OnPropertyChanged(nameof(ObjetsCollectes));
+            OnPropertyChanged(nameof(SelectedHero.Level));
+        }
+        else
+        {
+            throw new InvalidOperationException("Aucun héros sélectionné pour collecter l'objet.");
+        }
     }
 
     public void IncrementCombatTurns()
@@ -128,12 +139,8 @@ public class EtatJeu : INotifyPropertyChanged
 
     public void SetMode(string mode)
     {
-        if (mode != "Facile" && mode != "Difficile")
-        {
-            throw new ArgumentException("Mode invalide");
-        }
+        if (mode != "Facile" && mode != "Difficile") throw new ArgumentException("Mode invalide");
+
         SelectedMode = mode;
     }
-
-  
 }

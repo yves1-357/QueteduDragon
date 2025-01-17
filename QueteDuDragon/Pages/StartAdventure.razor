@@ -1,19 +1,19 @@
 ﻿@using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
 @inject EtatJeu EtatJeu
 @inject NavigationManager NavigationManager
 
 <h3>Commencer l'aventure </h3>
 <button @onclick="CommencerAventure ">Commencer l'aventure</button>
+
 @code {
 
     private void CommencerAventure()
     {
         if (EtatJeu.SelectedMode == "Facile")
         {
-            NavigationManager.NavigateTo("/mode-facile", true );
+            NavigationManager.NavigateTo("/mode-facile", true);
         }
-        else if  (EtatJeu.SelectedMode == "Difficile")
+        else if (EtatJeu.SelectedMode == "Difficile")
         {
             NavigationManager.NavigateTo("/mode-difficile", true);
         }
@@ -22,4 +22,5 @@
             Console.WriteLine("Aucun mode sélectionné !");
         }
     }
+
 }

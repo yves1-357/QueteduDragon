@@ -2,7 +2,6 @@
 
 public class BossFinal
 {
-  
     public int pointsVie { get; set; }
 
     public virtual void InitializeSkills()

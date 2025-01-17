@@ -2,17 +2,16 @@
 @using QueteDuDragon.Data
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
+
 <h3>Mode Difficile</h3>
 <p><strong>Bienvenue dans le mode difficile !</strong></p>
 
 <div style="display: flex; height: 100%;">
     <!-- Cadre à gauche -->
-
-    <div  style="width: 25%; background-color: darkred; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
-    
+    <div
+        style="width: 25%; background-color: darkred; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
         @if (EtatJeu.SelectedHero != null)
         {
-      
             <section>
                 <h3>Informations sur le personnage</h3>
                 <p><strong>Nom du personnage :</strong> @EtatJeu.SelectedHero.Name</p>
@@ -27,65 +26,48 @@
                         <li>@skill</li>
                     }
                 </ul>
-      
 
-                <p><strong>Objets collectés:</strong></p> 
-                <ul>
-                    @foreach (var item in EtatJeu.objetsCollectes)
-                    {
-                        <li>@item</li>
-                    }
-                </ul>
-      
-     
-                <p><strong>Niveau d'Expérience :</strong>@GetExperienceLevel()</p>
-      
-    
-                <button @onclick="AllerAuMagasin">Aller au Magasin </button>
+                <p><strong>Objets collectés par ce héros :</strong></p>
+                @if (EtatJeu.ObjetsCollectes.Any())
+                {
+                    <ul>
+                        @foreach (var item in EtatJeu.ObjetsCollectes)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>Aucun objet collecté pour ce héros.</p>
+                }
+
+                <button @onclick="AllerAuMagasin">Aller au Magasin</button>
                 <button @onclick="Retourner">Accueil</button>
-
             </section>
-      
         }
-
         else
         {
             <p>Erreur : Aucune information sur le héros disponible. Veuillez sélectionner un héros.</p>
-            <p>Debug : EtatJeu.SelectedHero est @((EtatJeu.SelectedHero == null ? "null" : "non-null"))</p>
         }
-  
     </div>
+
     <!-- Partie centrale et droite -->
     <div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
-        <Map  CurrentHero="@EtatJeu.SelectedHero"/>
+        <Map CurrentHero="@EtatJeu.SelectedHero"/>
     </div>
-
 </div>
-  
 
 @code{
- 
-      private void AllerAuMagasin()
-    {
-        Navigation.NavigateTo("/marchand");
-        StateHasChanged();
-       
-    }
 
-
-    private string GetExperienceLevel()
+    private void AllerAuMagasin()
     {
-        int nbObjets = EtatJeu.objetsCollectes.Count;
-        {
-            if (nbObjets >= 7) return " 3 ";
-            if (nbObjets >= 4) return " 2 ";
-            return " 1 ";
-        }
+        Navigation.NavigateTo("/magasin");
     }
+    
     private void Retourner()
     {
-        Navigation.NavigateTo("/"); 
+        Navigation.NavigateTo("/");
     }
 
-}
 }

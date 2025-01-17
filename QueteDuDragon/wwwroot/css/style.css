@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     background-color: #f4f4f9;
-    color:  #fff;
+    color: #fff;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -19,18 +19,19 @@
 
 h1, h3, h4, h5, h6 {
     margin: 0 0 10px;
-    color:yellow;
-    font-weight: bold;
-}
-h3{
-    margin: 0 0 10px;
-    color:yellow;
+    color: yellow;
     font-weight: bold;
 }
 
-h2{
+h3 {
     margin: 0 0 10px;
-    color:#2e4053;
+    color: yellow;
+    font-weight: bold;
+}
+
+h2 {
+    margin: 0 0 10px;
+    color: #2e4053;
     font-weight: bold;
 }
 
@@ -65,6 +66,7 @@ button:disabled {
     overflow-y: scroll;
     background-color: #f9f9f9;
 }
+
 .game-info {
     border: 2px solid #ccc; /* Bordure grise */
     border-radius: 8px; /* Coins arrondis */
@@ -85,30 +87,31 @@ button:disabled {
     color: #555; /* Couleur du texte */
 }
 
-.label{
+.label {
     background-color: yellow;
 }
 
 footer {
-  
+
     color: whitesmoke;
     text-align: center;
     padding: 10px;
 }
+
 .background-image {
     background-image: url('../images/marchand/mag.jpg');
     background-size: cover; /* L'image couvre toute la page */
     background-position: center; /* Centrer l'image */
     background-attachment: fixed; /* L'image reste fixe lors du défilement */
     background-repeat: no-repeat; /* Ne pas répéter l'image */
-    height:300px;
+    height: 300px;
     width: 100%;
     border: 2px solid #333;
     border-radius: 10px;
-   
+
     margin-top: 1px;
-    
-    }
+
+}
 
 
 

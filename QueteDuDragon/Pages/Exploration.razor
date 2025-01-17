@@ -1,28 +1,31 @@
 ﻿@page "/exploration"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
 @inject EtatJeu EtatJeu
 
-
 @code{
+
     private static readonly string[] AvailableItems =
     {
-        "Or", "Epee", "Armes à feu", 
-        "flèches", "haches", "arcs", "torches",
-        "Cuirasses", "batons",
+        "Or", "Epee", "Armes à feu",
+        "flèches", "haches", "arcs"
     };
+
     private void Explore()
     {
         if (EtatJeu.SelectedHero != null)
         {
-            Random random = new Random();
-            string foundItem = AvailableItems[random.Next(AvailableItems.Length)];
-            EtatJeu.SelectedHero.AjouterObjet(foundItem); // Utilise l’héros sélectionné
+            var random = new Random();
+            var foundItem = AvailableItems[random.Next(AvailableItems.Length)];
+            EtatJeu.SelectedHero.AjouterObjet(foundItem); // Appelle la méthode définie dans Hero.cs
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Aucun héros sélectionné. Impossible d'explorer.");
         }
     }
 
 }
-
 
 <h3>Exploration</h3>
 @if (EtatJeu.SelectedHero == null)
@@ -41,11 +44,19 @@ else
             <li>@skill</li>
         }
     </ul>
-
 }
-
+<p><strong>Objets collectés par ce héros :</strong></p>
+@if (EtatJeu.ObjetsCollectes != null && EtatJeu.ObjetsCollectes.Any())
+{
+    <ul>
+        @foreach (var item in EtatJeu.ObjetsCollectes)
+        {
+            <li>@item</li>
+        }
+    </ul>
 }
-<p>Objets collectés : @string.Join(", ",EtatJeu.SelectedHero.objetsCollectes ?? new List<string> ())</p>
-
+else
+{
+    <p>Aucun objet collecté pour ce héros.</p>
+}
 <button @onclick="Explore">Explorer</button>
-}
