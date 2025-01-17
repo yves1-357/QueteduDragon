@@ -1,22 +1,19 @@
 ﻿@page "/difficile1"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
-
 @if (victory)
 {
     <div class="victory-screen">
-        <h2>Victoire</h2>
+        <h2><strong>Victoire</strong></h2>
         <p>@victoryMessage</p>
-        <button @onclick="QuitterJeu">Continuez</button>
+        <button @onclick="ContinueGame">Continuez</button>
     </div>
 }
 else if (gameOver)
 {
     <div class="defeat-screen">
-        <h2>Défaite</h2>
+        <h2><strong>Défaite</strong></h2>
         <p>@defeatMessage</p>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
@@ -29,7 +26,7 @@ else
         <div class="battle-container">
             <!-- Image du héros -->
             <div class="hero-container">
-                <img src="Images/genie/@EtatJeu.SelectedHero.ImageName"alt="Héros" class="hero-image"/>
+                <img src="Images/genie/@EtatJeu.SelectedHero.ImageName" alt="Héros" class="hero-image"/>
                 <div class="skills-container">
                     @foreach (var skill in EtatJeu.SelectedHero.Skills)
                     {
@@ -44,19 +41,20 @@ else
             </div>
         </div>
 
-       
 
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
         </div>
     </div>
+    
+    
 }
 
 <style>
     .dungeon {
         width: 100%;
         height: 80vh;
-        background-image: url('Images/battlemonstres.jpg');
+        background-image: url('Images/Fondcombat.jpg');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -108,25 +106,19 @@ else
         margin-top: 20px;
     }
     
-     .defeat-screen, .victory-screen {
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
-         align-items: center;
-         height: 80vh;
-         background-color: rgba(0, 0, 0, 0.8);
-         color: white;
-         text-align: center;
-         padding: 20px;
-         border-radius: 10px;
-     }
-
-    .combat-content {
+    .defeat-screen, .victory-screen {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        height: 80vh;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
     }
+
 
     .hero-image, .monster-image {
         width: 200px;
@@ -134,33 +126,39 @@ else
         margin: 10px;
     }
 
-    
-
     button[style*="background-color: red"] {
         color: green;
         font-weight: bold;
         cursor: not-allowed;
     }
- 
+
+    button[disabled] {
+        background-color: red;
+        color: white;
+        cursor: not-allowed;
+    }
+
 </style>
 
 
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
+    private bool hasRestarted = false;
+    private bool canRestart = true;
     private bool gameOver = false;
-    private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
+    private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
-    private string combatMessage = "Tu es attaqué par des araignées, tu dois les éliminer.";
+    private string combatMessage = "Vous êtes agressé par un tas d'araignées, il faut les vaincre pour survivre";
 
     private void UseSkill(string skill)
     {
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
-            combatMessage = $"Vous venez d'attaquer l'araignée monstrueuse, continuez à attaquer.";
+            combatMessage = $"Vous venez d'attaquer l'araignée monstrueuse, vous avez gagné 5 points de plus, continuez à attaquer.";
             EtatJeu.SelectedHero.pointsVie += 5;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
@@ -168,25 +166,29 @@ else
             clicksToWin++;
             if (clicksToWin >= 2)
             {
-                hasWon = true;
                 victory = true;
-                victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner des points de plus.";
+                victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner despoints de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
             }
-            else 
+            else
             {
-                combatMessage = "Tu infliges quelques dégâts à l'araignée, mais elle contre-attaque violemment. Tu dois esquiver ses griffes venimeuses !";
-                
+                combatMessage = "Vous venez d'attaquer l'araignée monstrueuse, mais elle s'est défendue, continuez à attaquer.";
+
             }
         }
         else if (skill == "Coup de bouclier" || skill == "Bouclier magique" || skill == "Piège")
         {
-            HandleDefeat();
-            gameOver = true;
-            defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience ou Vous pouvez refaire la partie.";
-            
+            if (!hasRestarted)
+            {
+                HandleDefeat();
+                gameOver = true;
+                defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience.";
+
+            }
+          
         }
     }
+
     protected override void OnInitialized()
     {
         if (EtatJeu.SelectedHero != null)
@@ -195,6 +197,7 @@ else
         }
     }
 
+    
     private void ResetPointsVie()
     {
         if (EtatJeu.SelectedHero != null)
@@ -203,34 +206,44 @@ else
             Console.WriteLine($"Points de vie réinitialisés à {initialPointsVie}.");
         }
     }
-    
 
     private void HandleDefeat()
     {
-        combatMessage = "Vous avez perdu contre l'araignée monstrueuse, Vous pouvez refaire la partie.";
+        combatMessage = "Vous avez perdu contre l'araignée monstrueuse. Retournez à l'exploration pour gagner plus d'expérience.";
         ResetPointsVie(); // Réinitialiser les points de vie après une défaite
     }
 
+    private void ContinueGame()
+    {
+        if (EtatJeu.SelectedMode == "Difficile")
+        {
+            Navigation.NavigateTo("/mode-difficile", forceLoad: true);
+            
+        }
+        
+    }
 
     private void QuitterJeu()
     {
-        Navigation.NavigateTo("/mode-difficile");
+       
+        if (EtatJeu.SelectedMode == "Facile")
+        {
+            
+            Navigation.NavigateTo("/mode-facile", forceLoad: true);
+        }
+        else if (EtatJeu.SelectedMode == "Difficile")
+        {
+            Navigation.NavigateTo("/mode-difficile", forceLoad: true);
+        }
     }
-
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
-
+        
         Navigation.NavigateTo("/mode-difficile");
     }
-        
-    }
     
+        
+}
+
+
+}
