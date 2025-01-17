@@ -19,7 +19,6 @@ else if (gameOver)
         <p>@defeatMessage</p>
         @if (!hasRestarted)
         {
-            <button @onclick="RestartGame">Recommencer</button>
             <button disabled style="background-color: red;">Recommencer</button>
         }
         else
@@ -67,13 +66,6 @@ else
         </div>
     </div>
     
-    @if (!hasRestarted)
-    {
-        <button @onclick="RestartGame">Recommencer</button>
-        <button disabled style="background-color: red;">Recommencer</button>
-    }
-    
-
     
 }
 
@@ -271,34 +263,7 @@ else
         ResetPointsVie(); // Réinitialiser les points de vie après une défaite
     }
 
-    private async Task RestartGame()
-    {
-        if (!hasRestarted)
-        {
-            // Réinitialisation après la première défaite
-            hasRestarted = true;
-            showPopup = true;
-            popupMessage = "Redémarrage... Bonne chance!";
-            await Task.Delay(1500); // Pause pour afficher le popup
-            showPopup = false;
-
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = initialPointsVie; // Réinitialisation des points de vie
-            }
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else 
-        {
-
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chance!"; // Message pour la deuxième défaite
-            await Task.Delay(1500); // Pause pour le pop-up
-            showPopup = false;
-            
-
-        }
-    }
+ 
 
     
 
