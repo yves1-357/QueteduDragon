@@ -11,6 +11,9 @@
         public List<string> Tools { get; set; } = new List<string>(); // outils achete au magasin 
         public List<string> objetsCollectes { get; set; } = new List<string>();
         public int niveauExperience { get; set; } = 1;
+        
+        public int Row { get; set; } = 6; 
+        public int Col { get; set; } = 9;
 
         public Hero(string name, string imageName)
         {
@@ -57,9 +60,9 @@
 
         public int AllowedPurchases => Level switch
         {
-            1 => 3,
-            2 => 4,
-            3 => 7,
+            1 => 1,
+            2 => 2,
+            3 => 3,
             _ => 0
         };
         
