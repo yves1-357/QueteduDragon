@@ -4,6 +4,7 @@
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
+
 <p><strong>Bienvenue dans le mode facile !</strong></p>
 
 <div style="display: flex; height: 90vh;">
@@ -13,10 +14,11 @@
         {
             <section>
                 <img src="Images/genie/@EtatJeu.SelectedHero.ImageName"alt="Héros" class="hero-image"/>
-                <p><strong>Nom du personnage :</strong> @EtatJeu.SelectedHero.Name</p>
+                <p><strong>Nom :</strong> @EtatJeu.SelectedHero.Name</p>
                 <p><strong>Héros :</strong> @EtatJeu.SelectedHero.GetType().Name</p>
                 <p><strong>Points de vie :</strong> @EtatJeu.SelectedHero.pointsVie</p>
                 <p><strong>Niveau actuel :</strong> @EtatJeu.SelectedHero.Level</p>
+                <p><strong>Objets collectés :</strong> @EtatJeu.objetsCollectes.Count</p>
                 <p><strong>Compétences :</strong></p>
                 <ul>
                     @foreach (var skill in EtatJeu.SelectedHero.Skills.Distinct())
@@ -24,14 +26,7 @@
                         <li>@skill</li>
                     }
                 </ul>
-                <p><strong>Objets collectés:</strong></p>
-                <ul>
-                    @foreach (var item in EtatJeu.objetsCollectes)
-                    {
-                        <li>@item</li>
-                    }
-                </ul>
-                <p><strong>Niveau d'Expérience :</strong>@GetExperienceLevel()</p>
+               
                 <button @onclick="AllerAuMagasin">Aller au Magasin </button>
                 <button @onclick="Retourner">Accueil</button>
             </section>
@@ -42,6 +37,16 @@
             <p>Debug : EtatJeu.SelectedHero est @((EtatJeu.SelectedHero == null ? "null" : "non-null"))</p>
         }
     </div>
+
+    <div class="direction-buttons">
+        <button @onclick="() => MovePlayer(-1, 0)">⬆️</button>
+        <div class="horizontal-buttons">
+            <button @onclick="() => MovePlayer(0, -1)">⬅️</button>
+            <button @onclick="() => MovePlayer(0, 1)">➡️</button>
+        </div>
+        <button @onclick="() => MovePlayer(1, 0)">⬇️</button>
+    </div>
+
 
     <!-- Partie centrale et droite -->
     <div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
@@ -86,7 +91,11 @@
                             }
                             else if (row == 7 && col == 9)
                             {
-                                <img src="Images/shop.png" alt="Shop" />
+                                <img src="images/Shop.png" alt="Shop" />
+                            }
+                            else if (row == playerRow && col == playerCol)  
+                            {
+                                <img src="images/Hero.png" alt="Joueur" />
                             }
                             else if (row == 5 && col == 9)
                             {
@@ -106,7 +115,7 @@
     </div>
 </div>
 
-<div class="popup" style="display: @(showPopup ? "block" : "none");">
+<div class="@popupClass" style="display: @(showPopup ? "block" : "none");">
     <p>@popupMessage</p>
 </div>
 
@@ -149,15 +158,55 @@
     
     .donjon-boss-button img {
         all: unset;
-        width: 80%; /* S'assure que l'image occupe toute la cellule */
-        height: 100%; /* Adapte la hauteur de l'image */
-        object-fit: cover; /* Garde les proportions de l'image */
+        width: 80%; /* image occupe toute la cellule */
+        height: 100%; /* hauteur de l'image */
+        object-fit: cover; /* proportions de l'image */
     }
-        .popup {
+
+
+    .cellule img[alt="Joueur"] {
+        border: 2px solid red;
+    }
+
+
+    .direction-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .direction-buttons button {
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        border: none;
+        background-color: #444;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .direction-buttons button:hover {
+        background-color: #666;
+    }
+
+    .horizontal-buttons {
+        display: flex;
+        justify-content: center;
+        margin: 5px;
+    }
+
+    .horizontal-buttons button {
+        margin: 0 10px;
+    }
+
+    .popup-orange {
         position: fixed;
         top: 10%;
         right: 10%;
-        background-color: darkred;
+        background-color: black;
         color: white;
         padding: 20px;
         border: 2px solid #444;
@@ -165,10 +214,41 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         z-index: 1000;
     }
+
+    .popup-blue {
+        position: fixed;
+        top: 10%;
+        right: 10%;
+        background-color: blue;
+        color: white;
+        padding: 20px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
+
+    .popup-red {
+        position: fixed;
+        top: 10%;
+        right: 10%;
+        background-color: red;
+        color: white;
+        padding: 20px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
+
+
+
 </style>
 
 @code {
-    
+    private string popupClass = "";
+    private int playerRow = 7;
+    private int playerCol = 9;
     private List<(int row, int col)> treasureLocations = new()
     {
         (2, 5), (10, 10), (6, 15), (4, 8), (12, 3), (8, 18)
@@ -176,7 +256,7 @@
 
     private bool showPopup = false;
     private string popupMessage = "";
-    
+
     private bool IsTreasure(int row, int col) => treasureLocations.Contains((row, col));
 
     private bool IsMountain(int row, int col) => row == 0 || row == 14 || col == 0 || col == 19;
@@ -200,9 +280,115 @@
         else
         {
             popupMessage = "Vous n'avez pas assez de points pour affronter le Boss.";
+            popupClass = "popup-red";
             showPopup = true;
 
             // Masquer le pop-up après 2 secondes
+            Task.Delay(3000).ContinueWith(_ =>
+            {
+                showPopup = false;
+                InvokeAsync(StateHasChanged);
+            });
+        }
+    }
+
+    private string GetExperienceLevel()
+    {
+        int nbObjets = EtatJeu.objetsCollectes.Count;
+        if (nbObjets >= 7) return "3";
+        if (nbObjets >= 4) return "2";
+        return "1";
+    }
+    
+    private List<string> treasureMessages = new()
+    {
+        "Vous avez trouvé une bourse d'or bien remplit!",
+        "Une épée forgée par les elfes vient s'ajouter à votre équipement.",
+        "Votre carquois est désormais rempli de flèches empoisonnées.",
+        "Vous avez mis la main sur un bâton magique capable d'invoquer des créatures élémentaires.",
+        "Une armure en mithril, légère et résistante, vous protège désormais.",
+        "Quel coup de chance! Vous venez de découvrir un arc enchanté qui tire des flèches de feu."
+    };
+
+    private int treasuresCollected = 0;
+
+
+    private void MovePlayer(int rowChange, int colChange)
+    {
+        int newRow = playerRow + rowChange;
+        int newCol = playerCol + colChange;
+
+        // Assurez-vous que le joueur reste dans les limites de la carte
+        if (newRow >= 0 && newRow < 15 && newCol >= 0 && newCol < 20)
+        {
+            playerRow = newRow;
+            playerCol = newCol;
+            StateHasChanged();
+
+            if (IsTreasure(playerRow, playerCol) && treasuresCollected < treasureMessages.Count)
+            {
+                popupMessage = treasureMessages[treasuresCollected];
+                EtatJeu.objetsCollectes.Add($"Objet {treasuresCollected + 1}");
+                treasuresCollected++;
+                popupClass = "popup-orange";
+                showPopup = true;
+
+
+                updateHeroLevel();
+                
+                
+                Task.Delay(3000).ContinueWith(_ =>
+                {
+                    showPopup = false;
+                    InvokeAsync(StateHasChanged);
+                });
+            }
+            else if (playerRow == 1 && playerCol == 1)
+            {
+                Navigation.NavigateTo("/donjon1");
+            }
+            else if (playerRow == 1 && playerCol == 18)
+            {
+                Navigation.NavigateTo("/donjon2");
+            }
+            else if (playerRow == 5 && playerCol == 9)
+
+            {
+                _ = CheckAccessToDonjonBoss();
+                
+            }
+            else if (playerRow == 13 && playerCol == 1)
+            {
+                Navigation.NavigateTo("/donjon3");
+            }
+            else if (playerRow == 13 && playerCol == 18)
+            {
+                Navigation.NavigateTo("/donjon4");
+            }
+        }
+    }
+
+    private void updateHeroLevel()
+    {
+        int currentLevel = EtatJeu.SelectedHero.Level;
+        int newLevel = treasuresCollected switch
+        {
+            >= 5 => 3,
+            >= 2 => 2,
+            _ => 1
+        };
+        if (newLevel > currentLevel)
+        {
+            EtatJeu.SelectedHero.Level = newLevel;
+
+            popupMessage = newLevel switch
+            {
+                2 => "Vous etes au Niveau 2",
+                3 => "Vous etes au Niveau 3"
+            };
+
+            popupClass = "popup-blue";
+            showPopup = true;
             Task.Delay(2000).ContinueWith(_ =>
             {
                 showPopup = false;
@@ -211,11 +397,4 @@
         }
     }
     
-    private string GetExperienceLevel()
-    {
-        int nbObjets = EtatJeu.objetsCollectes.Count;
-        if (nbObjets >= 7) return "3";
-        if (nbObjets >= 4) return "2";
-        return "1";
-    }
 }
