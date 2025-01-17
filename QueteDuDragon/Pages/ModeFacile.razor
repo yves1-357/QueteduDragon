@@ -1,6 +1,5 @@
 ﻿@page "/mode-facile"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -176,7 +175,7 @@
 
 
     .cellule img[alt="Joueur"] {
-        border: 2px solid red;
+        border: 2px solid blue;
     }
 
 
@@ -252,8 +251,7 @@
         z-index: 1000;
     }
 
-
-
+    
 </style>
 
 @code {
@@ -284,7 +282,7 @@
 
     private async Task CheckAccessToDonjonBoss()
     {
-        if (EtatJeu.SelectedHero.pointsVie >= 30)
+        if (EtatJeu.SelectedHero.pointsVie >= 25)
         {
             Navigation.NavigateTo("/donjonboss");
         }

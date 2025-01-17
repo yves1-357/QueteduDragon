@@ -18,7 +18,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2>Défaite</h2>
         <p>@defeatMessage</p>
-        <button @onclick="RestartGame">Recommencer</button>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -43,10 +42,6 @@ else
             <div class="monster-container">
                 <img src="images/Monstres/squelettes.png" alt="Squelettes" class="monster-image"/>
             </div>
-        </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
         </div>
 
         <div class="action-buttons">
@@ -146,19 +141,9 @@ else
     }
  
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
-
-   
-</section>
-
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
     private bool hasWon = false;
     private bool victory = false;
@@ -173,17 +158,16 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Tes coups résonnent sur les os du squelette. Il vacille, mais ne lâche rien. Poursuis ton assaut !";
-            EtatJeu.SelectedHero.pointsVie += 5;
+            EtatJeu.SelectedHero.pointsVie += 4;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
             if (clicksToWin >= 4)
             {
-                hasWon = true;
                 victory = true;
                 victoryMessage ="Le squelette s'effondre sous tes coups. Tu l'as vaincu ! Féléctitations !";
-                EtatJeu.SelectedHero.pointsVie += 5;
+                EtatJeu.SelectedHero.pointsVie += 4;
             }
             else 
             {
@@ -215,37 +199,7 @@ else
             Console.WriteLine($"Points de vie réinitialisés à {initialPointsVie}.");
         }
     }
-
     
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
-
     private void HandleDefeat()
     {
         combatMessage = "Vous avez perdu contre le squelette.";
@@ -260,16 +214,7 @@ else
 
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
-
+     
         Navigation.NavigateTo("/mode-facile");
     }
         

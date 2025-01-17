@@ -17,20 +17,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2><strong>Défaite</strong></h2>
         <p>@defeatMessage</p>
-        @if (!hasRestarted)
-        {
-            <button disabled style="background-color: red;">Recommencer</button>
-        }
-        else
-        {
-            <section>
-                <div class="popup" style="display: @(showPopup ? "block" : "none");">
-                    <p>@popupMessage</p>
-                </div>
-
-
-            </section>
-        }
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -176,26 +162,17 @@ else
     }
 
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
 
-
-</section>
 
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private int defaiteCount = 0;
-    private bool isSecodeDefeat = false;
     private bool hasRestarted = false;
     private bool showRestartButton = true;
     private bool canRestart = true;
     private bool showPopup = false;
     private bool isButtonDisabled = false;
     private bool gameOver = false;
-    private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
     private string popupMessage = "";
@@ -215,7 +192,6 @@ else
             clicksToWin++;
             if (clicksToWin >= 2)
             {
-                hasWon = true;
                 victory = true;
                 victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner despoints de plus.";
                 EtatJeu.SelectedHero.pointsVie += 5;
@@ -232,7 +208,6 @@ else
             {
                 HandleDefeat();
                 gameOver = true;
-                hasRestarted = true;
                 defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience.";
 
             }
@@ -262,26 +237,13 @@ else
         combatMessage = "Vous avez perdu contre l'araignée monstrueuse. Retournez à l'exploration pour gagner plus d'expérience.";
         ResetPointsVie(); // Réinitialiser les points de vie après une défaite
     }
-
- 
-
     
-
     private void QuitterJeu()
     {
         Navigation.NavigateTo("/mode-facile");
     }
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
 
         Navigation.NavigateTo("/mode-facile");
     }

@@ -4,7 +4,6 @@
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
-
 <p><strong>Bienvenue dans le mode Difficile !</strong></p>
 
 <div style="display: flex; height: 90vh;">
@@ -144,65 +143,6 @@
     private bool IsTreasure(int row, int col) => treasureLocations.Contains((row, col));
 
     private bool IsMountain(int row, int col) => row == 0 || row == 14 || col == 0 || col == 19;
-=======
-<div style="display: flex; height: 100%;">
-    <!-- Cadre à gauche -->
-
-    <div  style="width: 25%; background-color: darkred; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
-    
-        @if (EtatJeu.SelectedHero != null)
-        {
-      
-            <section>
-                <h3>Informations sur le personnage</h3>
-                <p><strong>Nom du personnage :</strong> @EtatJeu.SelectedHero.Name</p>
-                <p><strong>Nom héros sélectionné :</strong> @EtatJeu.SelectedHero.GetType().Name</p>
-                <p><strong>Points de vie :</strong> @EtatJeu.SelectedHero.pointsVie</p>
-                <p><strong>Niveau actuel :</strong> @EtatJeu.SelectedHero.Level</p>
-                <p><strong>Compétences :</strong></p>
-
-                <ul>
-                    @foreach (var skill in EtatJeu.SelectedHero.Skills.Distinct())
-                    {
-                        <li>@skill</li>
-                    }
-                </ul>
-      
-
-                <p><strong>Objets collectés:</strong></p> 
-                <ul>
-                    @foreach (var item in EtatJeu.objetsCollectes)
-                    {
-                        <li>@item</li>
-                    }
-                </ul>
-      
-     
-                <p><strong>Niveau d'Expérience :</strong>@GetExperienceLevel()</p>
-      
-    
-                <button @onclick="AllerAuMagasin">Aller au Magasin </button>
-                <button @onclick="Retourner">Accueil</button>
-
-            </section>
-      
-        }
-
-        else
-        {
-            <p>Erreur : Aucune information sur le héros disponible. Veuillez sélectionner un héros.</p>
-            <p>Debug : EtatJeu.SelectedHero est @((EtatJeu.SelectedHero == null ? "null" : "non-null"))</p>
-        }
-  
-    </div>
-    <!-- Partie centrale et droite -->
-    <div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
-        <Map  CurrentHero="@EtatJeu.SelectedHero"/>
-    </div>
-
-</div>
-  
-
 
     private void AllerAuMagasin()
     {

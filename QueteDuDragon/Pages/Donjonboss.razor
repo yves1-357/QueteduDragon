@@ -18,7 +18,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2>Défaite</h2>
         <p>@defeatMessage</p>
-        <button @onclick="RestartGame">Recommencer</button>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -44,11 +43,7 @@ else
                 <img src="images/Monstres/feudragon.png" alt="Dragon de Feu" class="monster-image"/>
             </div>
         </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
-        </div>
-
+        
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
         </div>
@@ -124,13 +119,7 @@ else
          border-radius: 10px;
      }
 
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+     
     .hero-image, .monster-image {
         width: 200px;
         height: auto;
@@ -146,21 +135,11 @@ else
     }
  
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
-
-   
-</section>
 
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
-    private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
     private string popupMessage = "";
@@ -173,17 +152,16 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Votre attaque a trouvé sa marque ! Le dragon rugit de douleur, Poursuivez l'assaut !";
-            EtatJeu.SelectedHero.pointsVie += 5;
+            EtatJeu.SelectedHero.pointsVie += 2;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
-            if (clicksToWin >= 8)
+            if (clicksToWin >= 7)
             {
-                hasWon = true;
                 victory = true;
                 victoryMessage = "Victoire ! Vous avez terrassé le dragon ! Vous avez remporté la quete du dragon";
-                EtatJeu.SelectedHero.pointsVie += 5;
+                EtatJeu.SelectedHero.pointsVie += 8;
             }
             else 
             {
@@ -215,37 +193,7 @@ else
             Console.WriteLine($"Points de vie réinitialisés à {initialPointsVie}.");
         }
     }
-
     
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
-
     private void HandleDefeat()
     {
         combatMessage = "Vous avez perdu contre le dragon de feu. Retournez à l'exploration pour gagner plus d'expérience.";
@@ -280,15 +228,6 @@ else
 
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
 
         Navigation.NavigateTo("/mode-facile");
     }

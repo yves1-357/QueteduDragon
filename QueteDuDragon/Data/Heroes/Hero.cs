@@ -4,11 +4,11 @@
     {
         public string Name { get; set; }
         public int pointsVie { get; set; } = 5;
-        public int Level { get; set; } = 1; // Par défaut, le héros commence au niveau 1
+        public int Level { get; set; } = 1; // Par défaut, le héros commence au niveau 1.
         public List<string> Skills { get; set; } = new List<string>();
         public string ImageName { get; set; }
 
-        public List<string> Tools { get; set; } = new List<string>(); // outils achete au magasin 
+        public List<string> Tools { get; set; } = new List<string>(); // outils achete au magasin. 
         public List<string> objetsCollectes { get; set; } = new List<string>();
         public int niveauExperience { get; set; } = 1;
 
@@ -34,8 +34,8 @@
         private void UpdateniveauExperience()
         {
             int objetsCount = objetsCollectes.Count;
-            if (objetsCount >= 7) niveauExperience = 3;
-            else if (objetsCount >= 4) niveauExperience = 2;
+            if (objetsCount >= 5) niveauExperience = 3;
+            else if (objetsCount >= 2) niveauExperience = 2;
         }
         
         public virtual void InitializeSkills()

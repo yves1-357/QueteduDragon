@@ -112,7 +112,7 @@ public class EtatJeu : INotifyPropertyChanged
 
     public void AjouterObjetCollecte(string collecte)
     {
-        objetsCollectes.Add(collecte); // La liste privée est modifiable
+        objetsCollectes.Add(collecte); // La liste privée est modifiable.
         OnPropertyChanged(nameof(ObjetsCollectes)); // Mise à jour de l'interface utilisateur
     }
 
