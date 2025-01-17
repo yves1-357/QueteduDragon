@@ -11,9 +11,12 @@
         public List<string> Tools { get; set; } = new List<string>(); // outils achete au magasin 
         public List<string> objetsCollectes { get; set; } = new List<string>();
         public int niveauExperience { get; set; } = 1;
+
         
         public int Row { get; set; } = 6; 
         public int Col { get; set; } = 9;
+        public int Row { get; set; } = 6; 
+        public int Col { get; set; } = 9; 
 
         public Hero(string name, string imageName)
         {

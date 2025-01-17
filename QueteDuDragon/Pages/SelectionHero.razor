@@ -47,9 +47,9 @@
         
         Hero selectedHero = HeroType switch
         {
-            "Warrior" => new Warrior { Name = HeroName },
-            "Mage" => new Mage { Name = HeroName },
-            "Thief" => new Thief { Name = HeroName },
+            "Warrior" => new Warrior { Name = HeroName, Row = 7, Col = 9 },
+            "Mage" => new Mage { Name = HeroName, Row = 7 , Col = 9},
+            "Thief" => new Thief { Name = HeroName, Row = 7 , Col = 9},
             _ => throw new InvalidOperationException("Type de héros invalide.")
         };
         

@@ -7,6 +7,7 @@
 
 <p><strong>Bienvenue dans le mode facile !</strong></p>
 
+
 <div style="display: flex; height: 90vh;">
     <!-- Cadre à gauche -->
     <div style="width: 45%; background-color: black; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
@@ -37,6 +38,10 @@
             <p>Debug : EtatJeu.SelectedHero est @((EtatJeu.SelectedHero == null ? "null" : "non-null"))</p>
         }
     </div>
+
+<div style="display: flex; height: 100%">
+
+<!-- Cadre à gauche -->
 
     <div class="direction-buttons">
         <button @onclick="() => MovePlayer(-1, 0)">⬆️</button>
@@ -115,8 +120,14 @@
     </div>
 </div>
 
+
 <div class="@popupClass" style="display: @(showPopup ? "block" : "none");">
     <p>@popupMessage</p>
+<!-- Partie centrale et droite -->
+<div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
+    <Map  CurrentHero="@EtatJeu.SelectedHero"/>
+</div>
+
 </div>
 
 <style>

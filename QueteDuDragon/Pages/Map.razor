@@ -1,5 +1,70 @@
+
 @page "/map"
+=======
+
+@page "/map"
+@using QueteDuDragon.Data
+@using QueteDuDragon.Data.Heroes
+@inject NavigationManager NavigationManager
+
 @code {
+        [Parameter]
+        public Hero? CurrentHero { get; set; }
+
+    private void MoveHero(int deltaRow, int deltaCol)
+    {
+        if (CurrentHero != null)
+        {
+            int newRow = CurrentHero.Row + deltaRow;
+            int newCol = CurrentHero.Col + deltaCol;
+
+            // Empêche de sortir des limites de la carte
+            if (newRow >= 1 && newRow < 14 && newCol >= 1 && newCol < 19)
+            {
+                CurrentHero.Row = newRow;
+                CurrentHero.Col = newCol;
+                CheckHeroLocation(newRow, newCol);
+            }
+        }
+    }
+    private bool showTreasurePopup = false;
+
+    private void ClosePopup()
+    {
+        showTreasurePopup = false;
+    }
+    private void CheckHeroLocation(int row, int col)
+    {
+        // Redirection en fonction de la position actuelle
+        if (dungeonLocations.Contains((row, col)))
+        {
+            // Détermine le donjon en fonction des coordonnées
+            if (row == 1 && col == 1)
+                NavigationManager.NavigateTo("donjon1");
+            else if (row == 1 && col == 18)
+                NavigationManager.NavigateTo("donjon2");
+            else if (row == 13 && col == 1)
+                NavigationManager.NavigateTo("donjon3");
+            else if (row == 13 && col == 18)
+                NavigationManager.NavigateTo("donjon4");
+        }
+        else if (row == 5 && col == 9)
+        {
+            // Donjon Boss
+            NavigationManager.NavigateTo("Donjonboss");
+        }
+        else if (row == 7 && col == 9)
+            // Shop
+        {
+            NavigationManager.NavigateTo("Magasin");
+        }
+        // Trésor
+        else if (IsTreasure(row, col))
+        {
+            showTreasurePopup = true; // Affiche la fenêtre
+        }
+    }
+
     private List<(int row, int col)> treasureLocations = new List<(int row, int col)>()
     {
         (2, 5),
@@ -26,6 +91,12 @@
     {
         return treasureLocations.Contains((row, col));
     }
+
+    private bool IsHeroPosition(int row, int col)
+    {
+        return CurrentHero != null && CurrentHero.Row == row && CurrentHero.Col == col;
+    }
+
 }
 
 <div class="map">
@@ -34,7 +105,13 @@
         @for (int col = 0; col < 20; col++)
         {
             <div class="cellule">
-                @if (IsTreasure(row, col))
+
+                @if (IsHeroPosition(row, col)) 
+                {
+                    <img src="Images/Hero.png" alt="Hero" style="width: 100%; height: 100%; object-fit: cover;" />
+                }
+                else if (IsTreasure(row, col))
+
                 {
                     <img src="Images/Tresor.png" alt="Tresor" style="width: 100%; height: 100%; object-fit: cover;"/>
                 }
@@ -85,7 +162,62 @@
     }
 </div>
 
+<div class="controls">
+    <button @onclick="() => MoveHero(0, -1)">←</button>
+    <button @onclick="() => MoveHero(-1, 0)">↑</button>
+    <button @onclick="() => MoveHero(0, 1)">→</button>
+    <button @onclick="() => MoveHero(1, 0)">↓</button>
+    
+</div>
+@if (showTreasurePopup)
+{
+    <div class="popup-on-map">
+        <div class="popup-content">
+            <p>🎉 Félicitations, vous avez trouvé un trésor !</p>
+            <button @onclick="ClosePopup">OK</button>
+        </div>
+    </div>
+}
+
 <style>
+    
+    .popup-on-map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5); 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; 
+    }
+
+    .popup-content {
+        background-color: #050505;
+        border: 3px solid black; 
+        padding: 20px;
+        border-radius: 10px; 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+        text-align: center;
+    }
+
+    .popup-content p {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+    }
+
+    .popup-content button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
     .map {
         display: grid;
         grid-template-rows: repeat(15, 1fr);
@@ -104,4 +236,3 @@
         width: 30px;
         height: 30px;
     }
-</style>
