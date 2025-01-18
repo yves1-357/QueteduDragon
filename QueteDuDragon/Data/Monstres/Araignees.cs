@@ -2,7 +2,7 @@
 {
     public class Araignees : Monstre
     {
-        public Araignees() : base("Araignées", 40, "araignees.png")
+        public Araignees() : base("Araignées", 10, "araignees.png")
         {
             InitializeSkills();
         }

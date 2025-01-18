@@ -2,7 +2,7 @@
 {
     public class Gobelins : Monstre
     {
-        public Gobelins() : base("Gobelins", 30, "images/Monstres/gobelins.png")
+        public Gobelins() : base("Gobelins", 20, "images/Monstres/gobelins.png")
         {
             InitializeSkills();
         }

@@ -1,7 +1,5 @@
 ﻿@page "/difficile4"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -119,14 +117,7 @@ else
          padding: 20px;
          border-radius: 10px;
      }
-
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+     
     .hero-image, .monster-image {
         width: 200px;
         height: auto;
@@ -142,12 +133,6 @@ else
     }
  
 </style>
-<section>
- 
-
-   
-</section>
-
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
@@ -169,7 +154,7 @@ else
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
-            if (clicksToWin >= 2)
+            if (clicksToWin >= 4)
             {
                 hasWon = true;
                 victory = true;
@@ -222,16 +207,7 @@ else
 
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
-
+    
         Navigation.NavigateTo("/mode-difficile");
     }
         

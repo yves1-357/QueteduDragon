@@ -4,7 +4,7 @@ using QueteDuDragon.Data.Heroes;
 public class Dragon : BossFinal
 {
     public  string Name { get; set; } = "Dragon de feu";
-    public  new int pointsVie { get; set; } =  100; // Nombre eleves de points pour le mode 'facile'
+    public  new int pointsVie { get; set; } =  50;
 
     public List<string> Skills { get; set; } = new List<string>
         { "Puissant crache feu", "Griffes tranchantes", "Rugissement terrifiant" };
@@ -22,11 +22,7 @@ public class Dragon : BossFinal
         pointsVie -= damage;
         if (pointsVie < 0) pointsVie = 0;
     }
-
-        
-    public bool isDefeated => pointsVie <= 0;  // Indique si le dragon est vaincu
-
-        
+    
     public void Attack(Hero hero)  // réduit points de vie du heros 
         {
             hero.pointsVie -= AttackPower();
@@ -39,7 +35,7 @@ public class Dragon : BossFinal
     }
    public override void InitializeSkills() 
    {
-        // Initialise les compétences spécifiques au Dragon
+        // Initialise les compétences spécifiques au Dragon 
     }
 
    public int UseSkill(string skill)

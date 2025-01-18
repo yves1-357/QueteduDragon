@@ -2,7 +2,7 @@
 {
     public class Squelettes : Monstre
     {
-        public Squelettes() : base("Squelettes", 50, "squelettes.png")
+        public Squelettes() : base("Squelettes", 30, "squelettes.png")
         {
             InitializeSkills();
         }

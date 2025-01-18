@@ -2,7 +2,7 @@
 {
     public class Phenix : Monstre
     {
-        public Phenix() : base("Phénix", 100, "phenix.png")
+        public Phenix() : base("Phénix", 50, "phenix.png")
         {
             InitializeSkills();
         }

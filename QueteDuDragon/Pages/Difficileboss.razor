@@ -1,7 +1,5 @@
 ﻿@page "/difficileBoss"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -120,12 +118,7 @@ else
          border-radius: 10px;
      }
 
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+  
 
     .hero-image, .monster-image {
         width: 200px;
@@ -148,7 +141,6 @@ else
     private int chancesRestantes = 1;
     private int initialPointsVie;
     private bool gameOver = false;
-    private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
     private string victoryMessage = "";
@@ -160,17 +152,16 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Votre attaque a percé les écailles du dragon ! Vous infligez de lourds dégâts et Continuez ainsi pour l'abattre !";
-            EtatJeu.SelectedHero.pointsVie += 5;
+            EtatJeu.SelectedHero.pointsVie += 2;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
             if (clicksToWin >= 5)
             {
-                hasWon = true;
                 victory = true;
                 victoryMessage = "Le dragon est vaincu ! Vous avez triomphé face à cette créature légendaire. ";
-                EtatJeu.SelectedHero.pointsVie += 5;
+                EtatJeu.SelectedHero.pointsVie += 10;
             }
             else 
             {
@@ -218,15 +209,6 @@ else
 
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
 
         Navigation.NavigateTo("/mode-difficile");
     }

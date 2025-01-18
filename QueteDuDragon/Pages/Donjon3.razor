@@ -1,7 +1,5 @@
 @page "/donjon3"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -18,7 +16,6 @@ else if (gameOver)
     <div class="defeat-screen">
         <h2>Défaite</h2>
         <p>@defeatMessage</p>
-        <button @onclick="RestartGame">Recommencer</button>
         <button @onclick="QuitterJeu">Quitter</button>
     </div>
 }
@@ -44,11 +41,6 @@ else
                 <img src="images/Monstres/phenix.png" alt="Phénix" class="monster-image"/>
             </div>
         </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
-        </div>
-
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
         </div>
@@ -59,7 +51,7 @@ else
     .dungeon {
         width: 100%;
         height: 80vh;
-        background-image: url('Images/Fondchargement.jpg');
+        background-image: url('Images/Difficile1e.jpg');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -123,32 +115,13 @@ else
          padding: 20px;
          border-radius: 10px;
      }
-
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+     
     .hero-image, .monster-image {
         width: 200px;
         height: auto;
         margin: 10px;
     }
-
-    .popup {
-        position: fixed;
-        top: 10%;
-        right: 10%;
-        background-color: green;
-        padding: 10px 20px;
-        border: 2px solid black;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
-
+    
     button[style*="background-color: red"] {
         color: green;
         font-weight: bold;
@@ -156,21 +129,10 @@ else
     }
  
 </style>
-<section>
-    <div class="popup" style="display: @(showPopup ? "block" : "none");">
-        <p>@popupMessage</p>
-    </div>
-
-   
-</section>
-
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
-    private bool hasWon = false;
     private bool victory = false;
     private int clicksToWin = 0;
     private string popupMessage = "";
@@ -182,17 +144,16 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Vous avez infligé une blessure profonde au phénix. Mais la créature légendaire est loin d'être vaincue.";
-            EtatJeu.SelectedHero.pointsVie += 5;
+            EtatJeu.SelectedHero.pointsVie += 7;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
             if (clicksToWin >= 4)
             {
-                hasWon = true;
                 victory = true;
                 victoryMessage = " Félicitations ! Vous avez dompté le phénix, créature légendaire. Vous gagnez de précieux points ";
-                EtatJeu.SelectedHero.pointsVie += 5;
+                EtatJeu.SelectedHero.pointsVie += 7;
             }
             else 
             {
@@ -224,37 +185,6 @@ else
             Console.WriteLine($"Points de vie réinitialisés à {initialPointsVie}.");
         }
     }
-
-    
-    private async Task RestartGame()
-    {
-        if (chancesRestantes > 0)
-        {
-            chancesRestantes--;
-            showPopup = true;
-            //popupMessage = "Il vous reste 1 chance !";
-
-            //fermature du pop up et retour au jeu
-            await Task.Delay(1500);
-            showPopup = false;
-            if (EtatJeu.SelectedHero != null)
-            {
-                EtatJeu.SelectedHero.pointsVie = 5; // Réinitialisation des points de vie
-            }
-
-            // Rediriger vers la page actuelle pour relancer le jeu
-            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-        }
-        else
-
-        {
-            isButtonDisabled = true;
-            showPopup = true;
-            popupMessage = "Vous n'avez plus de chances ! Veuillez recommencer la partie.";
-        }
-    }
-    
-
     private void HandleDefeat()
     {
         combatMessage = "Le phénix vous a vaincu. Sa puissance est incommensurable. Pour espérer le vaincre, vous devrez explorer de nouveaux horizons et renforcer vos capacités.";
@@ -269,15 +199,6 @@ else
 
     private void Retourner()
     {
-        if (hasWon)
-        {
-            Console.WriteLine("Retour après la victoire, aucun point supplémentaire attribué.");
-        }
-        else
-        {
-            Console.WriteLine("Retour prématuré, aucun point attribué.");
-            ResetPointsVie();
-        }
 
         Navigation.NavigateTo("/mode-facile");
     }
