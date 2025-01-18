@@ -1,7 +1,5 @@
 @page "/donjon3"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -146,7 +144,7 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Vous avez infligé une blessure profonde au phénix. Mais la créature légendaire est loin d'être vaincue.";
-            EtatJeu.SelectedHero.pointsVie += 4;
+            EtatJeu.SelectedHero.pointsVie += 7;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
@@ -155,7 +153,7 @@ else
             {
                 victory = true;
                 victoryMessage = " Félicitations ! Vous avez dompté le phénix, créature légendaire. Vous gagnez de précieux points ";
-                EtatJeu.SelectedHero.pointsVie += 4;
+                EtatJeu.SelectedHero.pointsVie += 7;
             }
             else 
             {

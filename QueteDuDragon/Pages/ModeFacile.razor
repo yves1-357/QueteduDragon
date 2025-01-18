@@ -1,11 +1,11 @@
 ﻿@page "/mode-facile"
 @using QueteDuDragon.Data
+@using QueteDuDragon.Data.Heroes
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
 
 <p><strong>Bienvenue dans le mode facile !</strong></p>
-
 
 <div style="display: flex; height: 90vh;">
     <!-- Cadre à gauche -->
@@ -37,10 +37,6 @@
             <p>Debug : EtatJeu.SelectedHero est @((EtatJeu.SelectedHero == null ? "null" : "non-null"))</p>
         }
     </div>
-
-<div style="display: flex; height: 100%">
-
-<!-- Cadre à gauche -->
 
     <div class="direction-buttons">
         <button @onclick="() => MovePlayer(-1, 0)">⬆️</button>
@@ -119,14 +115,8 @@
     </div>
 </div>
 
-
 <div class="@popupClass" style="display: @(showPopup ? "block" : "none");">
     <p>@popupMessage</p>
-<!-- Partie centrale et droite -->
-<div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
-    <Map  CurrentHero="@EtatJeu.SelectedHero"/>
-</div>
-
 </div>
 
 <style>
@@ -251,7 +241,8 @@
         z-index: 1000;
     }
 
-    
+
+
 </style>
 
 @code {
@@ -272,7 +263,7 @@
 
     private void AllerAuMagasin()
     {
-        Navigation.NavigateTo("/marchand");
+        Navigation.NavigateTo("/magasin");
     }
 
     private void Retourner()

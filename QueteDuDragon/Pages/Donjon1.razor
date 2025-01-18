@@ -1,7 +1,5 @@
 @page "/donjon1"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 @if (victory)
@@ -42,11 +40,7 @@ else
                 <img src="images/Monstres/araignees.png" alt="Araignées" class="monster-image"/>
             </div>
         </div>
-
-        <div class="popup" style="display: @(showPopup ? "block" : "none");">
-            <p>@popupMessage</p>
-        </div>
-
+        
         <div class="action-buttons">
             <button @onclick="Retourner">Retour à l'exploration</button>
         </div>
@@ -111,18 +105,6 @@ else
         margin-top: 20px;
     }
 
-    .popup {
-        position: fixed;
-        top: 10%;
-        right: 10%;
-        background-color: green;
-        padding: 10px 20px;
-        border: 2px solid black;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
-
     .defeat-screen, .victory-screen {
         display: flex;
         flex-direction: column;
@@ -134,13 +116,6 @@ else
         text-align: center;
         padding: 20px;
         border-radius: 10px;
-    }
-
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
     }
 
     .hero-image, .monster-image {
@@ -167,15 +142,10 @@ else
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool hasRestarted = false;
     private bool showRestartButton = true;
-    private bool canRestart = true;
-    private bool showPopup = false;
-    private bool isButtonDisabled = false;
     private bool gameOver = false;
     private bool victory = false;
     private int clicksToWin = 0;
-    private string popupMessage = "";
     private string victoryMessage = "";
     private string defeatMessage = ""; // Message de défaite à afficher
     private string combatMessage = "Vous êtes agressé par un tas d'araignées, il faut les vaincre pour survivre";
@@ -185,7 +155,7 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Vous venez d'attaquer l'araignée monstrueuse, vous avez gagné 5 points de plus, continuez à attaquer.";
-            EtatJeu.SelectedHero.pointsVie += 5;
+            EtatJeu.SelectedHero.pointsVie += 4;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
@@ -194,7 +164,7 @@ else
             {
                 victory = true;
                 victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner despoints de plus.";
-                EtatJeu.SelectedHero.pointsVie += 5;
+                EtatJeu.SelectedHero.pointsVie += 4;
             }
             else
             {
@@ -204,13 +174,12 @@ else
         }
         else if (skill == "Coup de bouclier" || skill == "Bouclier magique" || skill == "Piège")
         {
-            if (!hasRestarted)
-            {
+            
                 HandleDefeat();
                 gameOver = true;
                 defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience.";
 
-            }
+            
           
         }
     }

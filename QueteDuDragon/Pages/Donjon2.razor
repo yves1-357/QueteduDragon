@@ -1,7 +1,5 @@
 @page "/donjon2"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -118,31 +116,13 @@ else
          padding: 20px;
          border-radius: 10px;
      }
-
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+     
     .hero-image, .monster-image {
         width: 200px;
         height: auto;
         margin: 10px;
     }
-
-    .popup {
-        position: fixed;
-        top: 10%;
-        right: 10%;
-        background-color: green;
-        padding: 10px 20px;
-        border: 2px solid black;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
+    
 
     button[style*="background-color: red"] {
         color: green;
@@ -174,7 +154,7 @@ else
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
             clicksToWin++;
-            if (clicksToWin >= 2)
+            if (clicksToWin >= 3)
             {
                 victory = true;
                 victoryMessage = "Victoire. Vous avez vaincu le gobelin monstrueux et Gagner des points de plus.";

@@ -15,8 +15,6 @@
         
         public int Row { get; set; } = 6; 
         public int Col { get; set; } = 9;
-        public int Row { get; set; } = 6; 
-        public int Col { get; set; } = 9; 
 
         public Hero(string name, string imageName)
         {

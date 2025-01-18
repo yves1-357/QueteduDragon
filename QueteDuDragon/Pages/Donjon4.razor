@@ -1,7 +1,5 @@
 @page "/donjon4"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
-@using QueteDuDragon.Data.Monstres
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
@@ -118,14 +116,7 @@ else
          padding: 20px;
          border-radius: 10px;
      }
-
-    .combat-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+     
     .hero-image, .monster-image {
         width: 200px;
         height: auto;
@@ -158,7 +149,7 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Tes coups résonnent sur les os du squelette. Il vacille, mais ne lâche rien. Poursuis ton assaut !";
-            EtatJeu.SelectedHero.pointsVie += 4;
+            EtatJeu.SelectedHero.pointsVie += 5;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
@@ -167,7 +158,7 @@ else
             {
                 victory = true;
                 victoryMessage ="Le squelette s'effondre sous tes coups. Tu l'as vaincu ! Féléctitations !";
-                EtatJeu.SelectedHero.pointsVie += 4;
+                EtatJeu.SelectedHero.pointsVie += 5;
             }
             else 
             {

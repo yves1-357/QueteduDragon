@@ -144,8 +144,6 @@ else
 @code {
     private int chancesRestantes = 1;
     private int initialPointsVie;
-    private bool hasRestarted = false;
-    private bool canRestart = true;
     private bool gameOver = false;
     private bool victory = false;
     private int clicksToWin = 0;
@@ -159,7 +157,7 @@ else
         if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
         {
             combatMessage = $"Vous venez d'attaquer l'araignée monstrueuse, vous avez gagné 5 points de plus, continuez à attaquer.";
-            EtatJeu.SelectedHero.pointsVie += 5;
+            EtatJeu.SelectedHero.pointsVie += 3;
         }
         else if (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
         {
@@ -168,7 +166,7 @@ else
             {
                 victory = true;
                 victoryMessage = "Victoire. Vous avez vaincu l'araignée monstruese et Gagner despoints de plus.";
-                EtatJeu.SelectedHero.pointsVie += 5;
+                EtatJeu.SelectedHero.pointsVie += 3;
             }
             else
             {
@@ -178,13 +176,12 @@ else
         }
         else if (skill == "Coup de bouclier" || skill == "Bouclier magique" || skill == "Piège")
         {
-            if (!hasRestarted)
-            {
+            
                 HandleDefeat();
                 gameOver = true;
                 defeatMessage = "L'araignée monstrueuse vous a attaqué, vous avez perdu. Retournez à l'exploration pour gagner plus d'expérience.";
 
-            }
+            
           
         }
     }
