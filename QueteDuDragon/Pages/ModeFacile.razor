@@ -91,7 +91,9 @@
                             }
                             else if (row == 7 && col == 9)
                             {
-                                <img src="images/Shop.png" alt="Shop" />
+                                <a href="magasin">
+                                    <img src="images/Shop.png" alt="Shop" />
+                                </a>
                             }
                             else if (row == playerRow && col == playerCol)  
                             {
@@ -247,7 +249,7 @@
 
 @code {
     private string popupClass = "";
-    private int playerRow = 7;
+    private int playerRow = 6;
     private int playerCol = 9;
     private List<(int row, int col)> treasureLocations = new()
     {
@@ -319,7 +321,7 @@
         int newCol = playerCol + colChange;
 
         // Assurez-vous que le joueur reste dans les limites de la carte
-        if (newRow >= 0 && newRow < 15 && newCol >= 0 && newCol < 20)
+        if (newRow >= 1 && newRow < 14 && newCol >= 1 && newCol < 19)
         {
             playerRow = newRow;
             playerCol = newCol;
@@ -364,6 +366,11 @@
             else if (playerRow == 13 && playerCol == 18)
             {
                 Navigation.NavigateTo("/donjon4");
+            }
+            else if (playerRow == 7 && playerCol == 9)
+                // Shop
+            {
+                Navigation.NavigateTo("Magasin");
             }
         }
     }
