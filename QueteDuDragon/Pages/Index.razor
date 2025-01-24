@@ -5,7 +5,7 @@
 @inject EtatJeu EtatJeu
 
 <header>
-    <h1>Quête du Dragon</h1>
+    <h1>Dragon Quest </h1>
 </header>
 
 <main>
@@ -39,7 +39,7 @@
         <h3>Créer votre personnage </h3>
         <form @onsubmit="HandleFormSubmit">
             <label>Nom du personnage :</label>
-            <input type="text"  @bind="HeroName" placeholder="Entrez votre nom" /> **a mettre 
+            <input type="text"  @bind="HeroName" placeholder="Entrez votre nom" required/> 
 
             <label>Choix du héros :</label>
             <select @bind="HeroType" required>
@@ -69,7 +69,7 @@
 }
 
 @code {
-    private string HeroName { get; set; } = "";
+    private string HeroName { get; set; } = "Hello";
     private string HeroType { get; set; } = "Thief"; // Valeur par défaut
     private string GameMode { get; set; } = "Facile"; // Valeur par défaut
     private string? ErrorMessage { get; set; }
