@@ -1,13 +1,13 @@
 ﻿@page "/mode-facile"
 @using QueteDuDragon.Data
-@using QueteDuDragon.Data.Heroes
+@using Microsoft.AspNetCore.Components.Web
 @inject NavigationManager Navigation
 @inject EtatJeu EtatJeu
 
 
 <p><strong>Bienvenue dans le mode facile !</strong></p>
 
-<div style="display: flex; height: 90vh;">
+<div style="display: flex; height: 90vh;"tabindex="0" @onkeydown="HandleKeyDown">
     <!-- Cadre à gauche -->
     <div style="width: 45%; background-color: black; padding: 20px; border-right: 1px solid #ccc; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
         @if (EtatJeu.SelectedHero != null)
@@ -38,15 +38,6 @@
         }
     </div>
 
-    <div class="direction-buttons">
-        <button @onclick="() => MovePlayer(-1, 0)">⬆️</button>
-        <div class="horizontal-buttons">
-            <button @onclick="() => MovePlayer(0, -1)">⬅️</button>
-            <button @onclick="() => MovePlayer(0, 1)">➡️</button>
-        </div>
-        <button @onclick="() => MovePlayer(1, 0)">⬇️</button>
-    </div>
-
 
     <!-- Partie centrale et droite -->
     <div style="flex-grow: 1; padding: 20px; display: flex; align-items: center; justify-content: center;">
@@ -63,25 +54,25 @@
                             }
                             else if (row == 1 && col == 1)
                             {
-                                <a href="donjon1">
+                                <a href="/Donjon/1?mode=Facile">
                                     <img src="Images/Donjon.png" alt="Donjon" />
                                 </a>
                             }
                             else if (row == 1 && col == 18)
                             {
-                                <a href="donjon2">
+                                <a href="/Donjon/2?mode=Facile">
                                     <img src="Images/Donjon.png" alt="Donjon" />
                                 </a>
                             }
                             else if (row == 13 && col == 1)
                             {
-                                <a href="donjon3">
+                                <a href="/Donjon/3?mode=Facile">
                                     <img src="Images/Donjon.png" alt="Donjon" />
                                 </a>
                             }
                             else if (row == 13 && col == 18)
                             {
-                                <a href="donjon4">
+                                <a href="/Donjon/4?mode=Facile">
                                     <img src="Images/Donjon.png" alt="Donjon" />
                                 </a>
                             }
@@ -99,13 +90,13 @@
                             }
                             else if (row == 5 && col == 9)
                             {
-                                <button @onclick="CheckAccessToDonjonBoss" class="donjon-boss-button">
-                                    <img src="Images/DonjonBoss.png" alt="donjonboss" />
+                                <button @onclick="CheckAccessToDonjonBoss" class="Donjon-boss-button">
+                                    <img src="Images/DonjonBoss.png" alt="Donjonboss" />
                                 </button>
                             }
                             else
                             {
-                                <img src="Images/Plaine.png" alt="Plaine" />
+                               // <img src="Images/Plaine.png" alt="Plaine" />
                             }
                         </div>
                     }
@@ -146,7 +137,7 @@
         margin: 10px;
     }
 
-    .donjon-boss-button {
+    .Donjon-boss-button {
         all: unset; /* Supprime les styles par défaut du bouton */
         display: block;
         width: 80%;
@@ -156,7 +147,7 @@
 
     }
     
-    .donjon-boss-button img {
+    .Donjon-boss-button img {
         all: unset;
         width: 80%; /* image occupe toute la cellule */
         height: 100%; /* hauteur de l'image */
@@ -167,15 +158,7 @@
     .cellule img[alt="Joueur"] {
         border: 2px solid blue;
     }
-
-
-    .direction-buttons {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
+    
     .direction-buttons button {
         width: 40px;
         height: 40px;
@@ -190,12 +173,6 @@
 
     .direction-buttons button:hover {
         background-color: #666;
-    }
-
-    .horizontal-buttons {
-        display: flex;
-        justify-content: center;
-        margin: 5px;
     }
 
     .horizontal-buttons button {
@@ -249,6 +226,7 @@
     private string popupClass = "";
     private int playerRow = 7;
     private int playerCol = 9;
+
     private List<(int row, int col)> treasureLocations = new()
     {
         (2, 5), (10, 10), (6, 15), (4, 8), (12, 3), (8, 18)
@@ -260,6 +238,81 @@
     private bool IsTreasure(int row, int col) => treasureLocations.Contains((row, col));
 
     private bool IsMountain(int row, int col) => row == 0 || row == 14 || col == 0 || col == 19;
+    
+    public void HandleKeyDown(KeyboardEventArgs e)
+    { 
+        switch (e.Key)
+            {
+            case "ArrowUp":
+                MovePlayer(-1, 0); // Vers le haut
+                break;
+            case "ArrowDown":
+                MovePlayer(1, 0); // Vers le bas
+                break;
+            case "ArrowLeft":
+                MovePlayer(0, -1); // Vers la gauche
+                break;
+            case "ArrowRight":
+                MovePlayer(0, 1); // Vers la droite
+                break;
+        }
+        
+    }
+
+    private void MovePlayer(int rowChange, int colChange)
+    {
+        int newRow = playerRow + rowChange;
+        int newCol = playerCol + colChange;
+
+        // Assurez-vous que le joueur reste dans les limites de la carte
+        if (newRow >= 0 && newRow < 15 && newCol >= 0 && newCol < 20)
+        {
+            playerRow = newRow;
+            playerCol = newCol;
+
+            if (IsTreasure(playerRow, playerCol) && treasuresCollected < treasureMessages.Count)
+            {
+                popupMessage = treasureMessages[treasuresCollected];
+                EtatJeu.objetsCollectes.Add($"Objet {treasuresCollected + 1}");
+                treasuresCollected++;
+                popupClass = "popup-orange";
+                showPopup = true;
+
+
+                updateHeroLevel();
+
+
+                Task.Delay(3000).ContinueWith(_ =>
+                {
+                    showPopup = false;
+                    InvokeAsync(StateHasChanged);
+                });
+            }
+            else if (playerRow == 1 && playerCol == 1)
+            {
+                Navigation.NavigateTo("/Donjon/1?mode=Facile");
+            }
+            else if (playerRow == 1 && playerCol == 18)
+            {
+                Navigation.NavigateTo("/Donjon/2?mode=Facile");
+            }
+            else if (playerRow == 5 && playerCol == 9)
+
+            {
+                _ = CheckAccessToDonjonBoss();
+
+            }
+            else if (playerRow == 13 && playerCol == 1)
+            {
+                Navigation.NavigateTo("/Donjon/3?mode=Facile");
+            }
+            else if (playerRow == 13 && playerCol == 18)
+            {
+                Navigation.NavigateTo("/Donjon/4?mode=Facile");
+            }
+        }
+
+    }
 
     private void AllerAuMagasin()
     {
@@ -273,9 +326,9 @@
 
     private async Task CheckAccessToDonjonBoss()
     {
-        if (EtatJeu.SelectedHero.pointsVie >= 25)
+        if (EtatJeu.SelectedHero.pointsVie >= 20)
         {
-            Navigation.NavigateTo("/donjonboss");
+            Navigation.NavigateTo("/Donjon/5?mode=Facile");
         }
         else
         {
@@ -291,15 +344,6 @@
             });
         }
     }
-
-    private string GetExperienceLevel()
-    {
-        int nbObjets = EtatJeu.objetsCollectes.Count;
-        if (nbObjets >= 7) return "3";
-        if (nbObjets >= 4) return "2";
-        return "1";
-    }
-    
     private List<string> treasureMessages = new()
     {
         "Vous avez trouvé une bourse d'or bien remplit!",
@@ -310,91 +354,44 @@
         "Quel coup de chance! Vous venez de découvrir un arc enchanté qui tire des flèches de feu."
     };
 
+   
     private int treasuresCollected = 0;
-
-
-    private void MovePlayer(int rowChange, int colChange)
-    {
-        int newRow = playerRow + rowChange;
-        int newCol = playerCol + colChange;
-
-        // Assurez-vous que le joueur reste dans les limites de la carte
-        if (newRow >= 0 && newRow < 15 && newCol >= 0 && newCol < 20)
+        private void updateHeroLevel()
         {
-            playerRow = newRow;
-            playerCol = newCol;
-            StateHasChanged();
-
-            if (IsTreasure(playerRow, playerCol) && treasuresCollected < treasureMessages.Count)
+            int currentLevel = EtatJeu.SelectedHero.Level;
+            int newLevel = treasuresCollected switch
             {
-                popupMessage = treasureMessages[treasuresCollected];
-                EtatJeu.objetsCollectes.Add($"Objet {treasuresCollected + 1}");
-                treasuresCollected++;
-                popupClass = "popup-orange";
+                >= 5 => 3,
+                >= 2 => 2,
+                _ => 1
+            };
+            if (newLevel > currentLevel)
+            {
+                EtatJeu.SelectedHero.Level = newLevel;
+
+                popupMessage = newLevel switch
+                {
+                    2 => "Vous etes au Niveau 2",
+                    3 => "Vous etes au Niveau 3"
+                };
+
+                popupClass = "popup-blue";
                 showPopup = true;
-
-
-                updateHeroLevel();
-                
-                
-                Task.Delay(3000).ContinueWith(_ =>
+                Task.Delay(2000).ContinueWith(_ =>
                 {
                     showPopup = false;
                     InvokeAsync(StateHasChanged);
                 });
             }
-            else if (playerRow == 1 && playerCol == 1)
-            {
-                Navigation.NavigateTo("/donjon1");
-            }
-            else if (playerRow == 1 && playerCol == 18)
-            {
-                Navigation.NavigateTo("/donjon2");
-            }
-            else if (playerRow == 5 && playerCol == 9)
+        }
 
-            {
-                _ = CheckAccessToDonjonBoss();
-                
-            }
-            else if (playerRow == 13 && playerCol == 1)
-            {
-                Navigation.NavigateTo("/donjon3");
-            }
-            else if (playerRow == 13 && playerCol == 18)
-            {
-                Navigation.NavigateTo("/donjon4");
-            }
+        private string GetExperienceLevel()
+        {
+            int nbObjets = EtatJeu.objetsCollectes.Count;
+            if (nbObjets >= 7) return "3";
+            if (nbObjets >= 4) return "2";
+            return "1";
         }
     }
 
-    private void updateHeroLevel()
-    {
-        int currentLevel = EtatJeu.SelectedHero.Level;
-        int newLevel = treasuresCollected switch
-        {
-            >= 5 => 3,
-            >= 2 => 2,
-            _ => 1
-        };
-        if (newLevel > currentLevel)
-        {
-            EtatJeu.SelectedHero.Level = newLevel;
-
-            popupMessage = newLevel switch
-            {
-                2 => "Vous etes au Niveau 2",
-                3 => "Vous etes au Niveau 3"
-            };
-
-            popupClass = "popup-blue";
-            showPopup = true;
-            Task.Delay(2000).ContinueWith(_ =>
-            {
-                showPopup = false;
-                InvokeAsync(StateHasChanged);
-            });
-        }
-    }
-    
 }
