@@ -1,0 +1,241 @@
+﻿@page "/Donjon/{id:int}"
+@using QueteDuDragon.Data
+@inject NavigationManager Navigation
+@inject EtatJeu EtatJeu
+
+@if (victory)
+{
+    <div class="victory-screen">
+        <h2>Victoire</h2>
+        <p>@VictoryMessage</p>
+        <button @onclick="QuitterJeu">Continuez</button>
+    </div>
+}
+else if (gameOver)
+{
+    <div class="defeat-screen">
+        <h2>Défaite</h2>
+        <p>@DefeatMessage</p>
+        <button @onclick="QuitterJeu">Quitter</button>
+    </div>
+}
+else
+{
+    <div class="dungeon" style="background-image: url('@BackgroundImage');">
+        <h3>@CombatMessage</h3>
+
+        <div class="battle-container">
+            <!-- Héros -->
+            <div class="hero-container">
+                <img src="Images/genie/@EtatJeu.SelectedHero.ImageName" alt="Héros" class="hero-image" />
+                <div class="skills-container">
+                    @foreach (var skill in EtatJeu.SelectedHero.Skills)
+                    {
+                        <button @onclick="() => UseSkill(skill)">@skill</button>
+                    }
+                </div>
+            </div>
+
+            <!-- Monstre -->
+            <div class="monster-container">
+                <img src="@MonsterImage" alt="@MonsterName" class="monster-image" />
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button @onclick="QuitterJeu">Retour à l'exploration</button>
+        </div>
+    </div>
+}
+
+<style>
+    .dungeon {
+        width: 100%;
+        height: 80vh;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+
+    .battle-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 80%;
+    }
+
+    .hero-container, .monster-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-image, .monster-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .skills-container {
+        margin-top: 10px;
+    }
+
+    .skills-container button {
+        margin: 5px;
+        padding: 10px;
+        background-color: #444;
+        color: white;
+        border: 1px solid white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .skills-container button:hover {
+        background-color: #666;
+    }
+
+    .action-buttons {
+        margin-top: 20px;
+    }
+    
+     .defeat-screen, .victory-screen {
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         height: 80vh;
+         background-color: rgba(0, 0, 0, 0.8);
+         color: white;
+         text-align: center;
+         padding: 20px;
+         border-radius: 10px;
+     }
+</style>
+
+@code {
+    [Parameter] public int id { get; set; }
+    [Parameter] public string Mode { get; set; } = "";
+
+    private bool gameOver = false;
+    private bool victory = false;
+    private int clicksToWin = 0;
+
+    private string VictoryMessage = "Victoire !";
+    private string DefeatMessage = "Défaite !";
+    private string CombatMessage = "";
+    private string MonsterName = "";
+    private string MonsterImage = "";
+    private string BackgroundImage = "";
+
+    protected override void OnInitialized()
+    {
+        if (id < 1 || id > 5)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+        ConfigureCombat(id);
+
+        if (EtatJeu.SelectedHero != null)
+        {
+            // Initialiser des valeurs spécifiques au héros
+        }
+    }
+
+    private void ConfigureCombat(int id)
+    {
+        // Configurer le combat en fonction de l'ID du Donjon
+        switch (id)
+        {
+            case 1:
+                MonsterName = "Araignées";
+                MonsterImage = "images/Monstres/araignees.png";
+                BackgroundImage = "Images/Fondcombat.jpg";
+                CombatMessage = "Vous êtes agressé par un tas d'araignées, il faut les vaincre pour survivre.";
+                clicksToWin = 2;
+                break;
+
+            case 2:
+                MonsterName = "Gobelins";
+                MonsterImage = "images/Monstres/gobelins.png";
+                BackgroundImage = "Images/battlemonstres.jpg";
+                CombatMessage = "Vous êtes pris en embuscade par une horde de gobelins.";
+                clicksToWin = 3;
+                break;
+
+            case 3:
+                MonsterName = "Phénix";
+                MonsterImage = "images/Monstres/phenix.png";
+                BackgroundImage = "Images/Difficile1e.jpg";
+                CombatMessage = "Un phénix, créature mythique, s'abat sur toi. Prépare-toi au combat.";
+                clicksToWin = 4;
+                break;
+
+            case 4:
+                MonsterName = "Squelettes";
+                MonsterImage = "images/Monstres/squelettes.png";
+                BackgroundImage = "Images/combatCard.jpg";
+                CombatMessage = "Une horde de squelettes vous assaille !";
+                clicksToWin = 4;
+                break;
+
+            case 5: // Boss final
+                MonsterName = "Dragon de Feu";
+                MonsterImage = "images/Monstres/feudragon.png";
+                BackgroundImage = "Images/Fondboss.jpg";
+                CombatMessage = "Le dragon, maître incontesté des airs, plonge vers vous.";
+                clicksToWin = 7;
+                break;
+
+            default:
+                Navigation.NavigateTo("/");
+                break;
+        }
+    }
+
+    private void UseSkill(string skill)
+    {
+        if (skill == "Attaque de base" || skill == "Boule de feu" || skill == "Flèche empoisonnée")
+        {
+            CombatMessage = $"Vous avez attaqué {MonsterName} !";
+            EtatJeu.SelectedHero.pointsVie += 2;
+            clicksToWin--;
+        } else if
+            (skill == "Cri de guerre" || skill == "Soigné les blessés" || skill == "Disparition")
+            {
+                clicksToWin++;
+                if (clicksToWin >= 3)
+                {
+                    victory = true;
+                VictoryMessage = $"Vous avez vaincu {MonsterName} !";
+                EtatJeu.SelectedHero.pointsVie += 4;
+            }
+                
+        }
+        else if (skill == "Coup de bouclier" || skill == "Bouclier magique" || skill == "Piège")
+        {
+            
+            gameOver = true;
+            DefeatMessage = $"{MonsterName} vous a vaincu !";
+        }
+    }
+
+ 
+    private void QuitterJeu()
+    {
+        if (EtatJeu.SelectedMode == "Facile")
+        {
+            Navigation.NavigateTo("/mode-facile", forceLoad: true);
+        }
+        else 
+        {
+            Navigation.NavigateTo("/mode-difficile", forceLoad: true);
+        }
+    }
+
+}
